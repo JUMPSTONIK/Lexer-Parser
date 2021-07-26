@@ -1,22 +1,14 @@
-extern func print_int(int) void;
-
-package GreatestCommonDivisor {
-    var a int = 10;
-    var b int = 20;
-
-    func main() int {
-        var x, y, z int;
-        x = a;
-        y = b;
-        z = gcd(x, y);
-
-        // print_int is part of the standard input-output library
-        print_int(z);
-    }
-
-    // function that computes the greatest common divisor
-    func gcd(a int, b int) int {
-        if (b == 0) { return(a); }
-        else { return( gcd(b, a % b) ); }
+class Program {
+	void main() {
+            int x; int y;
+            x = 10;
+            y = 5;
+            print(gcd(x, y));
+         }
+    int gcd(int a, int b) {
+        if ( b == 0 )
+            return a;
+        else
+            return gcd(b, a % b);
     }
 }

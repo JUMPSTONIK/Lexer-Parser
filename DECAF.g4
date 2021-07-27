@@ -1,69 +1,126 @@
 grammar DECAF;
 
-ID : [a-z] ([a-z]|[0-9])* ;
-NUM: [0-9]+;
-CHAR: [a-z];
+/*------------------------------------------------------------------
+ * LEXER RULES 
+ *------------------------------------------------------------------*/
+ 
+id	:	 Letter (Letter|Digit)*    		;
 
-program: 'class' 'Program' '{' (declaration)* '}' ;
-declaration: structDeclaration
-	| varDeclaration
-	| methodDeclaration 
+num	:	Digit (Digit)*			;
+
+Digit
+	:	[0-9]	;
+Letter
+	:	[a-zA-Z]	;
+
+
+/*------------------------------------------------------------------
+ * PARSER RULES
+ *------------------------------------------------------------------*/
+ 
+program:	'class'  id '{' (declaration)* '}'		;
+  
+declaration
+	:	 structDeclaration | varDeclaration | methodDeclaration 	;
+	
+varDeclaration 
+	:	varType id ';' | varType id '[' num ']' ';' ;
+
+structDeclaration 
+	:	'struct' id '{' (varDeclaration)* '}' ';';
+
+varType
+	:	'int'| 'char' | 'boolean' | 'struct' id | structDeclaration | 'void';
+	
+methodDeclaration
+	:	methodType id '(' (((var_type var_id) | 'void') (',' var_type var_id)*)? ')' block;
+
+methodType
+	:	'int' | 'char' | 'boolean' | 'void';
+
+parameter
+	:	parameterType id | parameterType id '['  ']';
+
+parameterType
+	:	'int' | 'char' | 'boolean' | 'void';
+	
+block	:	'{'  (varDeclaration)*  (statement)* '}';	
+
+var_type
+	:	'int' | 'boolean' | 'struct' id | structDeclaration;
+
+var_id  
+	:	id ('.' location)?;
+
+statement
+	: 	'if' '(' expression ')' block ('else' block)?
+		| 'while' '(' expression ')' block
+		| 'return' (expression)? ';'
+		| methodCall ';'
+		| block
+		| location '=' expression ';'
+		| (expression)? ';'
 	;
-varDeclaration : varType ID ';' | varType ID '[' NUM ']' ';' ;
-structDeclaration : 'struct' ID '{' (varDeclaration)* '}' ;
-varType : 'int'
-	| 'char'
-	| 'boolean'
-	| 'struct' ID
-	| structDeclaration
-	| 'void'
+
+location 
+	:	id ('.' location)? | id '[' expression ']' ('.' location)?    ;
+
+expression 
+	:	location
+		| methodCall
+		| literal
+		| expression op expression
+		| '-' expression
+		| '!' expression
+		| '(' expression ')'
 	;
-methodDeclaration : methodType ID '(' (parameter)* ')' block ;
-methodType : 'int'
-	| 'char'
-	| 'boolean'
-	| 'void'
+	
+methodCall
+	:	id '(' (arg (',' arg)*)? ')'	;
+
+arg	:	expression;
+	
+op	:	arith_op
+		| rel_op
+		| eq_op
+		| cond_op
 	;
-parameter : parameterType ID
-	| parameterType ID '[' ']'
+
+arith_op
+	:	'+'
+		| '-'
+		| '*'
+		| '/'
+		| '%'
 	;
-parameterType : 'int'
-	| 'char'
-	| 'boolean'
+
+rel_op
+	:	'<'
+		| '>'
+		| '<='
+		| '>='
 	;
-block : '{' (varDeclaration)* (statement)* '}' ;
-statement : 'if' '(' expression ')' block ('else' block)?
-	| 'while' '(' expression ')' block
-	| 'return' (expression)? ';'
-	| methodCall ';'
-	| block
-	| location '=' expression
-	| (expression)? ';'
+
+eq_op
+	:	'=='
+		| '!='
 	;
-location : (ID | ID '[' expression '[') ('.' location)? ;
-expression : location 
-	| methodCall
-	| literal
-	| expression op expression
-	| '-' expression
-	| '!' expression
-	| '{' expression '}'
+
+cond_op
+	:	'&&'
+		| '||'
 	;
-methodCall : ID '(' (arg)* ')' ;
-arg : expression ;
-op : arith_op
-	| rel_op
-	| eq_op
-	| cond_op
-	;
-arith_op : '+' | '-' | '*' | '/' | '%' ;
-rel_op : '<' | '>' | '<=' | '>=' ;
-eq_op :  '==' | '!=' ;
-cond_op : '&&' | '||' ;
-literal : int_literal
-	| char_literal
-	| bool_literal
-	;
-int_literal : NUM ;
-char_literal :  '\'' CHAR '\'' ;
-bool_literal : 'true' | 'false' ;
+
+literal	:	int_literal | char_literal | bool_literal ;
+
+int_literal
+	:	num;
+	
+char_literal
+	:	'\'' Letter '\'' 	;
+	
+bool_literal
+	:	'true' | 'false';
+
+SPACE
+    :	[ \t\r\n\u000C]+ -> skip	;

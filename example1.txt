@@ -1,9 +1,9 @@
 class Program {
-	def int add(int x, int y){
+	int add(int x, int y){
 		return x + y; // add the two parameters
 	}
 
-	def int main(){
+	int main(){
 		int a;
 		a = 3;
 		print(add(a, 2));

@@ -7,6 +7,26 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface DECAFListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link DECAFParser#id}.
+	 * @param ctx the parse tree
+	 */
+	void enterId(DECAFParser.IdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DECAFParser#id}.
+	 * @param ctx the parse tree
+	 */
+	void exitId(DECAFParser.IdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DECAFParser#num}.
+	 * @param ctx the parse tree
+	 */
+	void enterNum(DECAFParser.NumContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DECAFParser#num}.
+	 * @param ctx the parse tree
+	 */
+	void exitNum(DECAFParser.NumContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DECAFParser#program}.
 	 * @param ctx the parse tree
 	 */
@@ -106,6 +126,26 @@ public interface DECAFListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBlock(DECAFParser.BlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DECAFParser#var_type}.
+	 * @param ctx the parse tree
+	 */
+	void enterVar_type(DECAFParser.Var_typeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DECAFParser#var_type}.
+	 * @param ctx the parse tree
+	 */
+	void exitVar_type(DECAFParser.Var_typeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DECAFParser#var_id}.
+	 * @param ctx the parse tree
+	 */
+	void enterVar_id(DECAFParser.Var_idContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DECAFParser#var_id}.
+	 * @param ctx the parse tree
+	 */
+	void exitVar_id(DECAFParser.Var_idContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DECAFParser#statement}.
 	 * @param ctx the parse tree

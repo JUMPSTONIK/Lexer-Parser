@@ -13,6 +13,7 @@ Digit
 Letter
 	:	[a-zA-Z]	;
 
+COMMENTS: '//' ~('\r' | '\n' )*  -> channel(HIDDEN);
 
 /*------------------------------------------------------------------
  * PARSER RULES

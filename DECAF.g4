@@ -1,127 +1,179 @@
-grammar DECAF;
+grammar Decaf;
 
-/*------------------------------------------------------------------
- * LEXER RULES 
- *------------------------------------------------------------------*/
- 
-id	:	 Letter (Letter|Digit)*    		;
+@lexer::namespace{CustomIde}
+@parser::namespace{CustomIde}
 
-num	:	Digit (Digit)*			;
+program 
+	:   'class' Id '{' (declaration)* '}'
+	;
 
-Digit
-	:	[0-9]	;
-Letter
-	:	[a-zA-Z]	;
-
-COMMENTS: '//' ~('\r' | '\n' )*  -> channel(HIDDEN);
-
-/*------------------------------------------------------------------
- * PARSER RULES
- *------------------------------------------------------------------*/
- 
-program:	'class'  id '{' (declaration)* '}'		;
-  
-declaration
-	:	 structDeclaration | varDeclaration | methodDeclaration 	;
-	
+declaration 
+	:   structDeclaration#structDeclara
+	|   varDeclaration#varDecla
+	|   methodDeclaration#methodDecla
+	;
+	 
 varDeclaration 
-	:	varType id ';' | varType id '[' num ']' ';' ;
+	:vartype=varType Id ';'#normal										
+	|vartype= varType  Id '[' Num ']' ';'#lista
+								
+	;
 
-structDeclaration 
-	:	'struct' id '{' (varDeclaration)* '}' ';';
+structDeclaration
+	:   'struct' Id '{' (varDeclaration)* '}' 
+	;
+
+
 
 varType
-	:	'int'| 'char' | 'boolean' | 'struct' id | structDeclaration | 'void';
-	
-methodDeclaration
-	:	methodType id '(' (((var_type var_id) | 'void') (',' var_type var_id)*)? ')' block;
+	:   'int'														
+	|   'char'														
+	|   'boolean'													
+	|   'struct' Id												
+	|   structDeclaration											
+	|   'void'														
+	;
 
-methodType
-	:	'int' | 'char' | 'boolean' | 'void';
+methodDeclaration
+	:   metoInt = 'int' Id '(void)' block	#metoInt
+	|	metoIntWithParam='int' Id '(' (parameter (',' parameter)*)? ')' block #metoIntWithParam
+	|	metoChar = 'char' Id '(void)' block	#metoChar
+	|   metoCharWithParam='char' Id '(' (parameter (',' parameter)*)? ')' block #metoCharWithParam  
+	| 	metoBool = 'bool' Id '(void)' block	#metoBool
+	|   metoBoolWithParam='boolean' Id '(' (parameter (',' parameter)*)? ')' block	#metoBoolWithParam
+	|   metoVoid = 'void' Id '(void)' block	#metoVoid
+	|   metoVoidWithParam = 'void' Id '(' (parameter (',' parameter)*)? ')' block	#metoVoidWithParam
+	;
 
 parameter
-	:	parameterType id | parameterType id '['  ']';
+	:   param = parameterType Id#single_parameterDeclaration
+	;
 
 parameterType
-	:	'int' | 'char' | 'boolean' | 'void';
-	
-block	:	'{'  (varDeclaration)*  (statement)* '}';	
+	:   'int'#int_parameterType
+	|   'char'#char_parameterType
+	|   'boolean'#boolean_parameterType
+	;
 
-var_type
-	:	'int' | 'boolean' | 'struct' id | structDeclaration;
+block
+	:   '{'(varDeclaration)* (statement)* '}' 
+	;
 
-var_id  
-	:	id ('.' location)?;
 
 statement
-	: 	'if' '(' expression ')' block ('else' block)?
-		| 'while' '(' expression ')' block
-		| 'return' (expression)? ';'
-		| methodCall ';'
-		| block
-		| location '=' expression ';'
-		| (expression)? ';'
+   	:   ifStmt
+	|   whileStmt
+	|   returnStmt
+	|   methodCall 	';'										
+	|   block														
+	|   location '=' expression';'							
+	|   location '=' '(char)' expression ';'						
+	|   (expression)? ';'										
 	;
 
-location 
-	:	id ('.' location)? | id '[' expression ']' ('.' location)?    ;
-
-expression 
-	:	location
-		| methodCall
-		| literal
-		| expression op expression
-		| '-' expression
-		| '!' expression
-		| '(' expression ')'
+ifStmt
+	:'if' '(' expression ')' block1 = block ('else' block_else= block)?
 	;
-	
+whileStmt
+	:'while' '(' expression ')' block
+	;
+returnStmt
+	:'return' (expression)? ';'	
+	;
+location  
+	: Id ('.' location)?										
+	| Id '[' expression ']' ('.' location)?						
+	;
+
+
+expression  //ya
+	:   location#loca_expr											
+	|   methodCall#methodCall_expr											
+	|   Num#num_expr												
+	|   CharacterLiteral#charliteral_expr										
+	|   bool_literal#boolliteral_expr
+	|   derecha =expression arith_higher_op izquierda=expression#arith_higher_expr										
+	|   derecha =expression arith_op izquierda=expression#arith_op_expr								
+	|   derecha =expression rel_op izquierda=expression#rel_op_expr							
+	|   derecha =expression eq_op izquierda=expression#eq_op_expr									
+	|   derecha =expression cond_op izquierda=expression#cond_op_expr							
+	|   '-' expression#negativo_expr												
+	|   '!' expression#negacion_expr											
+	|   '(' expression ')'#parentesisexpr_expr											
+	;
+
 methodCall
-	:	id '(' (arg (',' arg)*)? ')'	;
-
-arg	:	expression;
-	
-op	:	arith_op
-		| rel_op
-		| eq_op
-		| cond_op
+	:	Id '(' (arg (',' arg)*)? ')' //ya
 	;
+
+arg
+	:   expression //ya
+	;
+
+arith_higher_op
+    : '*' 
+    | '/' 
+    | '%' 
+    ;
 
 arith_op
-	:	'+'
-		| '-'
-		| '*'
-		| '/'
-		| '%'
+	:   '+'
+	|   '-'
 	;
 
 rel_op
-	:	'<'
-		| '>'
-		| '<='
-		| '>='
+	:   '<'
+	|   '>'
+	|   '<='
+	|   '>='
 	;
 
 eq_op
-	:	'=='
-		| '!='
+	:   '=='
+	|   '!='
 	;
 
 cond_op
-	:	'&&'
-		| '||'
+	:   '&&'
+	|   '||'
+	;
+	
+bool_literal //ya
+	:   'true'
+	|   'false'
 	;
 
-literal	:	int_literal | char_literal | bool_literal ;
+Id
+	:   Letter (Letter|Digit)*
+	;
 
-int_literal
-	:	num;
-	
-char_literal
-	:	'\'' Letter '\'' 	;
-	
-bool_literal
-	:	'true' | 'false';
+Num
+	:   Digit+
+	;
 
-SPACE
-    :	[ \t\r\n\u000C]+ -> skip	;
+CharacterLiteral
+	:   '\'' SingleCharacter '\''
+	;
+
+fragment
+SingleCharacter
+	:   ~['\\]
+	;
+
+Digit 
+	:   [0-9]
+	;
+
+Letter
+	:   [a-zA-Z]
+	;
+
+WS  :   [  \t\r\n\u000C]+ -> skip ;
+ 
+COMMENT
+	:   '/*' .*? '*/' -> skip
+	;
+
+LINE_COMMENT
+	:   '//' ~[\r\n]* -> skip
+	;

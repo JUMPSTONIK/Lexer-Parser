@@ -16,33 +16,16 @@ def main(argv):
 
     visitor = miVisitor()
     visitor.visit(tree)
-
-    # Mostrar las variables
-    print("\nvariables")
-    for item in visitor.variables:
-        item.showValues()
         
-    # agregar las variable correspondientes a su struct y ambito
-    for i in range(0, len(visitor.structs)):
-        for var in visitor.variables:
-            if visitor.structs[i].nombre == var.ambito:
-                visitor.structs[i].variables.append(var)
+
     print('Variables')
-    print(visitor.vars)
-    print('listas')
+    print(visitor.variables)
+    print('Listas')
     print(visitor.lists)
-    print('structs')
-    print(visitor.strucs)
-
-    # Mostrar los Structs
-    for struct in visitor.structs:
-        print("\n=========")
-        print("Struct\n")
-        print(struct.nombre)
-        struct.showValues()
-        struct.showVariables()
-
-
+    print('Structs')
+    print(visitor.structs)
+    print('Metodos')
+    print(visitor.metodos)
 
     # print(tree.toStringTree(recog=parser))
 

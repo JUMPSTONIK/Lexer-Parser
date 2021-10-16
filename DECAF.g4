@@ -1,4 +1,4 @@
-grammar Decaf;
+grammar DECAF;
 
 @lexer::namespace{CustomIde}
 @parser::namespace{CustomIde}
@@ -168,7 +168,7 @@ Letter
 	:   [a-zA-Z]
 	;
 
-WS  :   [  \t\r\n\u000C]+ -> skip ;
+WS  :   ('\t'|'\r'|'\n'|'\u000C')+ -> skip ;
  
 COMMENT
 	:   '/*' .*? '*/' -> skip

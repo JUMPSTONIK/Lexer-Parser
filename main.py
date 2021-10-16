@@ -27,6 +27,13 @@ def main(argv):
         for var in visitor.variables:
             if visitor.structs[i].nombre == var.ambito:
                 visitor.structs[i].variables.append(var)
+    print('Variables')
+    print(visitor.vars)
+    print('listas')
+    print(visitor.lists)
+    print('structs')
+    print(visitor.strucs)
+
     # Mostrar los Structs
     for struct in visitor.structs:
         print("\n=========")
@@ -36,14 +43,6 @@ def main(argv):
         struct.showVariables()
 
 
-        
-
-                
-            
-
-            
-        
-    
 
     # print(tree.toStringTree(recog=parser))
 

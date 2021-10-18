@@ -1,16 +1,16 @@
 import sys
 from antlr4 import *
-from DecafLexer import DecafLexer
-from DecafParser import DecafParser
+from DECAFLexer import DECAFLexer
+from DECAFParser import DECAFParser
 from miVisitor import miVisitor
-
+import IntermidiateCode
 
 
 def main(argv):
     input = FileStream(argv[1])
-    lexer = DecafLexer(input)
+    lexer = DECAFLexer(input)
     stream = CommonTokenStream(lexer)
-    parser = DecafParser(stream)
+    parser = DECAFParser(stream)
     tree = parser.program()
     
 
@@ -26,6 +26,13 @@ def main(argv):
     print(visitor.structs)
     print('Metodos')
     print(visitor.metodos)
+    content = ''
+    with open(argv[1]) as f:
+        content = f.readlines()
+    print(content[0])
+
+    codigo_intermedio = IntermidiateCode.Generador(content)
+    IntermidiateCode.printCode(codigo_intermedio)
 
     # print(tree.toStringTree(recog=parser))
 

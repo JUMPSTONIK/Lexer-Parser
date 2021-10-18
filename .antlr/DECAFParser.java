@@ -978,31 +978,69 @@ public class DECAFParser extends Parser {
 	}
 
 	public static class StatementContext extends ParserRuleContext {
+		public StatementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_statement; }
+	 
+		public StatementContext() { }
+		public void copyFrom(StatementContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class IfSt_statementContext extends StatementContext {
 		public IfStmtContext ifStmt() {
 			return getRuleContext(IfStmtContext.class,0);
 		}
-		public WhileStmtContext whileStmt() {
-			return getRuleContext(WhileStmtContext.class,0);
-		}
-		public ReturnStmtContext returnStmt() {
-			return getRuleContext(ReturnStmtContext.class,0);
-		}
-		public MethodCallContext methodCall() {
-			return getRuleContext(MethodCallContext.class,0);
-		}
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
-		}
+		public IfSt_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class Asign_statementContext extends StatementContext {
 		public LocationContext location() {
 			return getRuleContext(LocationContext.class,0);
 		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public StatementContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
+		public Asign_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class Char_asign_statementContext extends StatementContext {
+		public LocationContext location() {
+			return getRuleContext(LocationContext.class,0);
 		}
-		@Override public int getRuleIndex() { return RULE_statement; }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public Char_asign_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class Unknown_statementContext extends StatementContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public Unknown_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class While_statementContext extends StatementContext {
+		public WhileStmtContext whileStmt() {
+			return getRuleContext(WhileStmtContext.class,0);
+		}
+		public While_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class Method_call_statementContext extends StatementContext {
+		public MethodCallContext methodCall() {
+			return getRuleContext(MethodCallContext.class,0);
+		}
+		public Method_call_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class Block_statementContext extends StatementContext {
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public Block_statementContext(StatementContext ctx) { copyFrom(ctx); }
+	}
+	public static class Return_statementContext extends StatementContext {
+		public ReturnStmtContext returnStmt() {
+			return getRuleContext(ReturnStmtContext.class,0);
+		}
+		public Return_statementContext(StatementContext ctx) { copyFrom(ctx); }
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -1014,6 +1052,7 @@ public class DECAFParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 			case 1:
+				_localctx = new IfSt_statementContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(196);
@@ -1021,6 +1060,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new While_statementContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(197);
@@ -1028,6 +1068,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 3:
+				_localctx = new Return_statementContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(198);
@@ -1035,6 +1076,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 4:
+				_localctx = new Method_call_statementContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(199);
@@ -1044,6 +1086,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 5:
+				_localctx = new Block_statementContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
 				setState(202);
@@ -1051,6 +1094,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 6:
+				_localctx = new Asign_statementContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(203);
@@ -1064,6 +1108,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 7:
+				_localctx = new Char_asign_statementContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
 				setState(208);
@@ -1079,6 +1124,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 8:
+				_localctx = new Unknown_statementContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
 				setState(215);

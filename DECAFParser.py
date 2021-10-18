@@ -306,6 +306,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitProgram" ):
                 listener.exitProgram(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitProgram" ):
+                return visitor.visitProgram(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -376,6 +382,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitStructDeclara" ):
                 listener.exitStructDeclara(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitStructDeclara" ):
+                return visitor.visitStructDeclara(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MethodDeclaContext(DeclarationContext):
 
@@ -395,6 +407,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMethodDecla" ):
                 listener.exitMethodDecla(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMethodDecla" ):
+                return visitor.visitMethodDecla(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class VarDeclaContext(DeclarationContext):
 
@@ -413,6 +431,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitVarDecla" ):
                 listener.exitVarDecla(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitVarDecla" ):
+                return visitor.visitVarDecla(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -493,6 +517,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitLista" ):
                 listener.exitLista(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLista" ):
+                return visitor.visitLista(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class NormalContext(VarDeclarationContext):
 
@@ -514,6 +544,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNormal" ):
                 listener.exitNormal(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNormal" ):
+                return visitor.visitNormal(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -589,6 +625,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitStructDeclaration" ):
                 listener.exitStructDeclaration(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitStructDeclaration" ):
+                return visitor.visitStructDeclaration(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -648,6 +690,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitVarType" ):
                 listener.exitVarType(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitVarType" ):
+                return visitor.visitVarType(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -750,6 +798,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMetoIntWithParam" ):
                 listener.exitMetoIntWithParam(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoIntWithParam" ):
+                return visitor.visitMetoIntWithParam(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MetoIntContext(MethodDeclarationContext):
 
@@ -772,6 +826,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMetoInt" ):
                 listener.exitMetoInt(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoInt" ):
+                return visitor.visitMetoInt(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MetoCharContext(MethodDeclarationContext):
 
@@ -793,6 +853,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitMetoChar" ):
                 listener.exitMetoChar(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoChar" ):
+                return visitor.visitMetoChar(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class MetoCharWithParamContext(MethodDeclarationContext):
@@ -822,6 +888,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMetoCharWithParam" ):
                 listener.exitMetoCharWithParam(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoCharWithParam" ):
+                return visitor.visitMetoCharWithParam(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MetoVoidContext(MethodDeclarationContext):
 
@@ -843,6 +915,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitMetoVoid" ):
                 listener.exitMetoVoid(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoVoid" ):
+                return visitor.visitMetoVoid(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class MetoVoidWithParamContext(MethodDeclarationContext):
@@ -872,6 +950,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMetoVoidWithParam" ):
                 listener.exitMetoVoidWithParam(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoVoidWithParam" ):
+                return visitor.visitMetoVoidWithParam(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MetoBoolWithParamContext(MethodDeclarationContext):
 
@@ -900,6 +984,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMetoBoolWithParam" ):
                 listener.exitMetoBoolWithParam(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoBoolWithParam" ):
+                return visitor.visitMetoBoolWithParam(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MetoBoolContext(MethodDeclarationContext):
 
@@ -921,6 +1011,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitMetoBool" ):
                 listener.exitMetoBool(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMetoBool" ):
+                return visitor.visitMetoBool(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1171,6 +1267,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitSingle_parameterDeclaration" ):
                 listener.exitSingle_parameterDeclaration(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSingle_parameterDeclaration" ):
+                return visitor.visitSingle_parameterDeclaration(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
     def parameter(self):
@@ -1223,6 +1325,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitInt_parameterType" ):
                 listener.exitInt_parameterType(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInt_parameterType" ):
+                return visitor.visitInt_parameterType(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Boolean_parameterTypeContext(ParameterTypeContext):
 
@@ -1239,6 +1347,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitBoolean_parameterType" ):
                 listener.exitBoolean_parameterType(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBoolean_parameterType" ):
+                return visitor.visitBoolean_parameterType(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Char_parameterTypeContext(ParameterTypeContext):
 
@@ -1254,6 +1368,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitChar_parameterType" ):
                 listener.exitChar_parameterType(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitChar_parameterType" ):
+                return visitor.visitChar_parameterType(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1325,6 +1445,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitBlock" ):
                 listener.exitBlock(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlock" ):
+                return visitor.visitBlock(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1373,45 +1499,220 @@ class DECAFParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
+
+        def getRuleIndex(self):
+            return DECAFParser.RULE_statement
+
+     
+        def copyFrom(self, ctx:ParserRuleContext):
+            super().copyFrom(ctx)
+
+
+
+    class IfSt_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
         def ifStmt(self):
             return self.getTypedRuleContext(DECAFParser.IfStmtContext,0)
 
 
-        def whileStmt(self):
-            return self.getTypedRuleContext(DECAFParser.WhileStmtContext,0)
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterIfSt_statement" ):
+                listener.enterIfSt_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitIfSt_statement" ):
+                listener.exitIfSt_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitIfSt_statement" ):
+                return visitor.visitIfSt_statement(self)
+            else:
+                return visitor.visitChildren(self)
 
 
-        def returnStmt(self):
-            return self.getTypedRuleContext(DECAFParser.ReturnStmtContext,0)
+    class Asign_statementContext(StatementContext):
 
-
-        def methodCall(self):
-            return self.getTypedRuleContext(DECAFParser.MethodCallContext,0)
-
-
-        def block(self):
-            return self.getTypedRuleContext(DECAFParser.BlockContext,0)
-
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
 
         def location(self):
             return self.getTypedRuleContext(DECAFParser.LocationContext,0)
-
 
         def expression(self):
             return self.getTypedRuleContext(DECAFParser.ExpressionContext,0)
 
 
-        def getRuleIndex(self):
-            return DECAFParser.RULE_statement
-
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterStatement" ):
-                listener.enterStatement(self)
+            if hasattr( listener, "enterAsign_statement" ):
+                listener.enterAsign_statement(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitStatement" ):
-                listener.exitStatement(self)
+            if hasattr( listener, "exitAsign_statement" ):
+                listener.exitAsign_statement(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAsign_statement" ):
+                return visitor.visitAsign_statement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class Char_asign_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def location(self):
+            return self.getTypedRuleContext(DECAFParser.LocationContext,0)
+
+        def expression(self):
+            return self.getTypedRuleContext(DECAFParser.ExpressionContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterChar_asign_statement" ):
+                listener.enterChar_asign_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitChar_asign_statement" ):
+                listener.exitChar_asign_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitChar_asign_statement" ):
+                return visitor.visitChar_asign_statement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class Unknown_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def expression(self):
+            return self.getTypedRuleContext(DECAFParser.ExpressionContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterUnknown_statement" ):
+                listener.enterUnknown_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitUnknown_statement" ):
+                listener.exitUnknown_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitUnknown_statement" ):
+                return visitor.visitUnknown_statement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class While_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def whileStmt(self):
+            return self.getTypedRuleContext(DECAFParser.WhileStmtContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterWhile_statement" ):
+                listener.enterWhile_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitWhile_statement" ):
+                listener.exitWhile_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitWhile_statement" ):
+                return visitor.visitWhile_statement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class Method_call_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def methodCall(self):
+            return self.getTypedRuleContext(DECAFParser.MethodCallContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterMethod_call_statement" ):
+                listener.enterMethod_call_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitMethod_call_statement" ):
+                listener.exitMethod_call_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMethod_call_statement" ):
+                return visitor.visitMethod_call_statement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class Block_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def block(self):
+            return self.getTypedRuleContext(DECAFParser.BlockContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterBlock_statement" ):
+                listener.enterBlock_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitBlock_statement" ):
+                listener.exitBlock_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBlock_statement" ):
+                return visitor.visitBlock_statement(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class Return_statementContext(StatementContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.StatementContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def returnStmt(self):
+            return self.getTypedRuleContext(DECAFParser.ReturnStmtContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterReturn_statement" ):
+                listener.enterReturn_statement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitReturn_statement" ):
+                listener.exitReturn_statement(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitReturn_statement" ):
+                return visitor.visitReturn_statement(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1425,24 +1726,28 @@ class DECAFParser ( Parser ):
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,18,self._ctx)
             if la_ == 1:
+                localctx = DECAFParser.IfSt_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 196
                 self.ifStmt()
                 pass
 
             elif la_ == 2:
+                localctx = DECAFParser.While_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 197
                 self.whileStmt()
                 pass
 
             elif la_ == 3:
+                localctx = DECAFParser.Return_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
                 self.state = 198
                 self.returnStmt()
                 pass
 
             elif la_ == 4:
+                localctx = DECAFParser.Method_call_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
                 self.state = 199
                 self.methodCall()
@@ -1451,12 +1756,14 @@ class DECAFParser ( Parser ):
                 pass
 
             elif la_ == 5:
+                localctx = DECAFParser.Block_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
                 self.state = 202
                 self.block()
                 pass
 
             elif la_ == 6:
+                localctx = DECAFParser.Asign_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 6)
                 self.state = 203
                 self.location()
@@ -1469,6 +1776,7 @@ class DECAFParser ( Parser ):
                 pass
 
             elif la_ == 7:
+                localctx = DECAFParser.Char_asign_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 7)
                 self.state = 208
                 self.location()
@@ -1483,6 +1791,7 @@ class DECAFParser ( Parser ):
                 pass
 
             elif la_ == 8:
+                localctx = DECAFParser.Unknown_statementContext(self, localctx)
                 self.enterOuterAlt(localctx, 8)
                 self.state = 215
                 self._errHandler.sync(self)
@@ -1534,6 +1843,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitIfStmt" ):
                 listener.exitIfStmt(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitIfStmt" ):
+                return visitor.visitIfStmt(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1598,6 +1913,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitWhileStmt" ):
                 listener.exitWhileStmt(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitWhileStmt" ):
+                return visitor.visitWhileStmt(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -1645,6 +1966,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitReturnStmt" ):
                 listener.exitReturnStmt(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitReturnStmt" ):
+                return visitor.visitReturnStmt(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1703,6 +2030,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLocation" ):
                 listener.exitLocation(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLocation" ):
+                return visitor.visitLocation(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -1803,6 +2136,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitCond_op_expr" ):
                 listener.exitCond_op_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCond_op_expr" ):
+                return visitor.visitCond_op_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Boolliteral_exprContext(ExpressionContext):
 
@@ -1821,6 +2160,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBoolliteral_expr" ):
                 listener.exitBoolliteral_expr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBoolliteral_expr" ):
+                return visitor.visitBoolliteral_expr(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class Loca_exprContext(ExpressionContext):
@@ -1841,6 +2186,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitLoca_expr" ):
                 listener.exitLoca_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLoca_expr" ):
+                return visitor.visitLoca_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Num_exprContext(ExpressionContext):
 
@@ -1858,6 +2209,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNum_expr" ):
                 listener.exitNum_expr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNum_expr" ):
+                return visitor.visitNum_expr(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class Arith_op_exprContext(ExpressionContext):
@@ -1886,6 +2243,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitArith_op_expr" ):
                 listener.exitArith_op_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitArith_op_expr" ):
+                return visitor.visitArith_op_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Parentesisexpr_exprContext(ExpressionContext):
 
@@ -1904,6 +2267,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitParentesisexpr_expr" ):
                 listener.exitParentesisexpr_expr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitParentesisexpr_expr" ):
+                return visitor.visitParentesisexpr_expr(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class Rel_op_exprContext(ExpressionContext):
@@ -1932,6 +2301,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitRel_op_expr" ):
                 listener.exitRel_op_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitRel_op_expr" ):
+                return visitor.visitRel_op_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class MethodCall_exprContext(ExpressionContext):
 
@@ -1951,6 +2326,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMethodCall_expr" ):
                 listener.exitMethodCall_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMethodCall_expr" ):
+                return visitor.visitMethodCall_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Charliteral_exprContext(ExpressionContext):
 
@@ -1968,6 +2349,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitCharliteral_expr" ):
                 listener.exitCharliteral_expr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCharliteral_expr" ):
+                return visitor.visitCharliteral_expr(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class Arith_higher_exprContext(ExpressionContext):
@@ -1996,6 +2383,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitArith_higher_expr" ):
                 listener.exitArith_higher_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitArith_higher_expr" ):
+                return visitor.visitArith_higher_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Negativo_exprContext(ExpressionContext):
 
@@ -2014,6 +2407,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNegativo_expr" ):
                 listener.exitNegativo_expr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNegativo_expr" ):
+                return visitor.visitNegativo_expr(self)
+            else:
+                return visitor.visitChildren(self)
 
 
     class Eq_op_exprContext(ExpressionContext):
@@ -2042,6 +2441,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitEq_op_expr" ):
                 listener.exitEq_op_expr(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitEq_op_expr" ):
+                return visitor.visitEq_op_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
 
     class Negacion_exprContext(ExpressionContext):
 
@@ -2060,6 +2465,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitNegacion_expr" ):
                 listener.exitNegacion_expr(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNegacion_expr" ):
+                return visitor.visitNegacion_expr(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -2271,6 +2682,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitMethodCall" ):
                 listener.exitMethodCall(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitMethodCall" ):
+                return visitor.visitMethodCall(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -2336,6 +2753,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitArg" ):
                 listener.exitArg(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitArg" ):
+                return visitor.visitArg(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -2372,6 +2795,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitArith_higher_op" ):
                 listener.exitArith_higher_op(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitArith_higher_op" ):
+                return visitor.visitArith_higher_op(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -2416,6 +2845,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitArith_op" ):
                 listener.exitArith_op(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitArith_op" ):
+                return visitor.visitArith_op(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -2458,6 +2893,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitRel_op" ):
                 listener.exitRel_op(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitRel_op" ):
+                return visitor.visitRel_op(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -2502,6 +2943,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitEq_op" ):
                 listener.exitEq_op(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitEq_op" ):
+                return visitor.visitEq_op(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -2545,6 +2992,12 @@ class DECAFParser ( Parser ):
             if hasattr( listener, "exitCond_op" ):
                 listener.exitCond_op(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitCond_op" ):
+                return visitor.visitCond_op(self)
+            else:
+                return visitor.visitChildren(self)
+
 
 
 
@@ -2587,6 +3040,12 @@ class DECAFParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitBool_literal" ):
                 listener.exitBool_literal(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBool_literal" ):
+                return visitor.visitBool_literal(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 

@@ -1,22 +1,18 @@
-class Program
-{
+class Program{
 
 int A[10];
 
-void main(void)
-{
+void main(void){
 
 	int i;
 	i = 0;
-	while(i<10)
-	{
+	while(i<10){
 		A[i]=InputInt();
 		i = i+1;		
 	}
 	Ordenar();
 	i = 0;
-	while(i<10)
-	{
+	while(i<10){
 		OutputInt(A[i]);
 		i = i+1;
 	}
@@ -24,14 +20,12 @@ void main(void)
 }
 
 
-void Ordenar(void)
-{
+void Ordenar(void){
 	int i;
 	int j;
 	int temp;
 	i = 0;
-	while(i<10)
-	{
+	while(i<10){
 		int Index;
 		Index = Minimo(i);
 		temp = A[Index];
@@ -41,16 +35,13 @@ void Ordenar(void)
 	}
 }
 
-int Minimo(int i)
-{
+int Minimo(int i){
 	int Min;
 	int index;
 	Min = A[i];
 	index = i;
-	while(i<10)
-	{
-		if (A[i]<Min)
-		{
+	while(i<10){
+		if (A[i]<Min){
 			Min = A[i];
 			index = i;
 		}
@@ -59,11 +50,12 @@ int Minimo(int i)
 	return index;
 }
 
-void OutputInt(int n)
-{
+void OutputInt(int n){
+
 }
 
-int InputInt(void)
-{return 0;}
+int InputInt(void){
+return 0;
+}
 
 }

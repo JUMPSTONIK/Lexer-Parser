@@ -61,14 +61,14 @@ block
 
 
 statement
-   	:   ifStmt
-	|   whileStmt
-	|   returnStmt
-	|   methodCall 	';'										
-	|   block														
-	|   location '=' expression';'							
-	|   location '=' '(char)' expression ';'						
-	|   (expression)? ';'										
+   	:   ifStmt#ifSt_statement
+	|   whileStmt#while_statement
+	|   returnStmt#return_statement
+	|   methodCall 	';'#method_call_statement									
+	|   block#block_statement														
+	|   location '=' expression';'#asign_statement							
+	|   location '=' '(char)' expression ';'#char_asign_statement						
+	|   (expression)? ';'#unknown_statement										
 	;
 
 ifStmt
@@ -168,7 +168,7 @@ Letter
 	:   [a-zA-Z]
 	;
 
-WS  :   ('\t'|'\r'|'\n'|'\u000C')+ -> skip ;
+WS: [ \t\r\n\u000C]+ -> skip;
  
 COMMENT
 	:   '/*' .*? '*/' -> skip

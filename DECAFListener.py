@@ -197,12 +197,75 @@ class DECAFListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by DECAFParser#statement.
-    def enterStatement(self, ctx:DECAFParser.StatementContext):
+    # Enter a parse tree produced by DECAFParser#ifSt_statement.
+    def enterIfSt_statement(self, ctx:DECAFParser.IfSt_statementContext):
         pass
 
-    # Exit a parse tree produced by DECAFParser#statement.
-    def exitStatement(self, ctx:DECAFParser.StatementContext):
+    # Exit a parse tree produced by DECAFParser#ifSt_statement.
+    def exitIfSt_statement(self, ctx:DECAFParser.IfSt_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#while_statement.
+    def enterWhile_statement(self, ctx:DECAFParser.While_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#while_statement.
+    def exitWhile_statement(self, ctx:DECAFParser.While_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#return_statement.
+    def enterReturn_statement(self, ctx:DECAFParser.Return_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#return_statement.
+    def exitReturn_statement(self, ctx:DECAFParser.Return_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#method_call_statement.
+    def enterMethod_call_statement(self, ctx:DECAFParser.Method_call_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#method_call_statement.
+    def exitMethod_call_statement(self, ctx:DECAFParser.Method_call_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#block_statement.
+    def enterBlock_statement(self, ctx:DECAFParser.Block_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#block_statement.
+    def exitBlock_statement(self, ctx:DECAFParser.Block_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#asign_statement.
+    def enterAsign_statement(self, ctx:DECAFParser.Asign_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#asign_statement.
+    def exitAsign_statement(self, ctx:DECAFParser.Asign_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#char_asign_statement.
+    def enterChar_asign_statement(self, ctx:DECAFParser.Char_asign_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#char_asign_statement.
+    def exitChar_asign_statement(self, ctx:DECAFParser.Char_asign_statementContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#unknown_statement.
+    def enterUnknown_statement(self, ctx:DECAFParser.Unknown_statementContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#unknown_statement.
+    def exitUnknown_statement(self, ctx:DECAFParser.Unknown_statementContext):
         pass
 
 

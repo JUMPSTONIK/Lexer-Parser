@@ -1,8 +1,8 @@
-from DecafParser import DecafParser
-from DecafVisitor import DecafVisitor
+from DECAFParser import DECAFParser
+from DECAFVisitor import DECAFVisitor
 from TablaDeSimbolos import *
 
-class miVisitor(DecafVisitor):
+class miVisitor(DECAFVisitor):
     def __init__(self):
         TYPEVALUES = {
             "int" : 4,
@@ -21,14 +21,15 @@ class miVisitor(DecafVisitor):
         self.structs = {}
         self.metodos = {}
 
-    def visitProgram(self, ctx:DecafParser.ProgramContext):
+    def visitProgram(self, ctx:DECAFParser.ProgramContext):
         return self.visitChildren(ctx)
 
     '''Estos son los metodos para obtener el la informacion de todos los tipos de funciones
         Cada uno hace distincion si es sin metodos o con metodos'''
 
-    def visitMetoInt(self, ctx:DecafParser.MetoIntContext):
-        self.ambito = ctx.Id()
+    def visitMetoInt(self, ctx:DECAFParser.MetoIntContext):
+        self.ambito = str(ctx.Id())
+        
         # print(str(ctx.Id()))
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'int'
@@ -37,8 +38,8 @@ class miVisitor(DecafVisitor):
         # print(ctx.getText())
         return self.visitChildren(ctx)
 
-    def visitMetoIntWithParam(self, ctx:DecafParser.MetoIntWithParamContext):
-        self.ambito = ctx.Id()
+    def visitMetoIntWithParam(self, ctx:DECAFParser.MetoIntWithParamContext):
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'int'
         self.metodos[str(ctx.Id())]['params'] = {}
@@ -47,8 +48,8 @@ class miVisitor(DecafVisitor):
         # print(ctx.getText())
         return self.visitChildren(ctx)
 
-    def visitMetoChar(self, ctx:DecafParser.MetoCharContext):
-        self.ambito = ctx.Id()
+    def visitMetoChar(self, ctx:DECAFParser.MetoCharContext):
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'char'
         self.metodos[str(ctx.Id())]['offset'] = 0
@@ -56,8 +57,8 @@ class miVisitor(DecafVisitor):
         # print(ctx.getText())
         return self.visitChildren(ctx)
 
-    def visitMetoCharWithParam(self, ctx:DecafParser.MetoCharWithParamContext):
-        self.ambito = ctx.Id()
+    def visitMetoCharWithParam(self, ctx:DECAFParser.MetoCharWithParamContext):
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'char'
         self.metodos[str(ctx.Id())]['params'] = {}
@@ -66,8 +67,8 @@ class miVisitor(DecafVisitor):
         # print(ctx.getText())
         return self.visitChildren(ctx)
 
-    def visitMetoBool(self, ctx:DecafParser.MetoBoolContext):
-        self.ambito = ctx.Id()
+    def visitMetoBool(self, ctx:DECAFParser.MetoBoolContext):
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'boolean'
         self.metodos[str(ctx.Id())]['offset'] = 0
@@ -75,8 +76,8 @@ class miVisitor(DecafVisitor):
         # print(ctx.getText())
         return self.visitChildren(ctx)
 
-    def visitMetoBoolWithParam(self, ctx:DecafParser.MetoBoolWithParamContext):
-        self.ambito = ctx.Id()
+    def visitMetoBoolWithParam(self, ctx:DECAFParser.MetoBoolWithParamContext):
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'boolean'
         self.metodos[str(ctx.Id())]['params'] = {}
@@ -85,9 +86,9 @@ class miVisitor(DecafVisitor):
         # print(ctx.getText())
         return self.visitChildren(ctx)
 
-    def visitMetoVoid(self, ctx:DecafParser.MetoVoidContext):
+    def visitMetoVoid(self, ctx:DECAFParser.MetoVoidContext):
         # print("----" + str(ctx.parentCtx))
-        self.ambito = ctx.Id()
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'void'
         self.metodos[str(ctx.Id())]['offset'] = 0
@@ -96,8 +97,8 @@ class miVisitor(DecafVisitor):
         
         return self.visitChildren(ctx)
 
-    def visitMetoVoidWithParam(self, ctx:DecafParser.MetoVoidWithParamContext):
-        self.ambito = ctx.Id()
+    def visitMetoVoidWithParam(self, ctx:DECAFParser.MetoVoidWithParamContext):
+        self.ambito = str(ctx.Id())
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'void'
         self.metodos[str(ctx.Id())]['params'] = {}
@@ -107,15 +108,25 @@ class miVisitor(DecafVisitor):
         return self.visitChildren(ctx)
 
     '''Con esta funcion puedo ir obteniendo cada uno de los parametros de cada funcion'''
-    def visitSingle_parameterDeclaration(self, ctx:DecafParser.Single_parameterDeclarationContext):
-        print(ctx.getText())
+    def visitSingle_parameterDeclaration(self, ctx:DECAFParser.Single_parameterDeclarationContext):
+        
+        self.variables[str(ctx.Id())] = {}
+        self.variables[str(ctx.Id())]['tipo'] = ctx.getText()[:-len(str(ctx.Id()))]
+        self.variables[str(ctx.Id())]['ambito'] = str(self.ambito)
+        # self.variables[str(ctx.Id())]['offset'] = 0
+        self.variables[str(ctx.Id())]['offset'] = TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
+        self.variables[str(ctx.Id())]['value'] = TYPEINITVALUE[self.variables[str(ctx.Id())]['tipo']]
+        
+        self.metodos[self.ambito]['params'][str(ctx.Id())] = self.variables[str(ctx.Id())]
+        self.metodos[self.ambito]['offset'] += self.variables[str(ctx.Id())]['offset']
+
         return self.visitChildren(ctx)
 
     ''' 
     Aqui es donde visitamos los tipos de variables como variables tipo int, char, bool, lists y los structs
     '''
     '''Esta es la funcion encargada de obtener la informacion de las variables int, char, bool'''
-    def visitNormal(self, ctx:DecafParser.NormalContext):
+    def visitNormal(self, ctx:DECAFParser.NormalContext):
         
         if(" " not in str(ctx.parentCtx)):
             self.ambito = "global"
@@ -140,13 +151,14 @@ class miVisitor(DecafVisitor):
             # print(self.variables)
             self.structs[self.variables[str(ctx.Id())]['ambito']]['variables'][str(ctx.Id())] = self.variables[str(ctx.Id())]
             self.structs[self.variables[str(ctx.Id())]['ambito']]['offset'] += self.variables[str(ctx.Id())]['offset']
-        # print(self.structs)
-        # print(self.variables)
-        # print(ctx.varType)
+        
+        if(self.variables[str(ctx.Id())]['ambito'] != 'global' and "struct" not in self.variables[str(ctx.Id())]['ambito']):
+            self.metodos[self.ambito]['offset'] += self.variables[str(ctx.Id())]['offset']
+
         return self.visitChildren(ctx)
 
     '''Esta es la funcion encargada de obtener la informacion de las variables del tipo lista'''
-    def visitLista(self, ctx:DecafParser.ListaContext):
+    def visitLista(self, ctx:DECAFParser.ListaContext):
         # print(ctx.Num())
         if(" " not in str(ctx.parentCtx)):
             self.ambito = "global"
@@ -170,10 +182,13 @@ class miVisitor(DecafVisitor):
             self.structs[self.lists[str(ctx.Id())]['ambito']]['variables'][str(ctx.Id())] = self.lists[str(ctx.Id())]
             self.structs[self.lists[str(ctx.Id())]['ambito']]['offset'] += self.lists[str(ctx.Id())]['offset']
         
+        if(self.lists[str(ctx.Id())]['ambito'] != 'global' and "struct" not in self.lists[str(ctx.Id())]['ambito']):
+            self.metodos[self.ambito]['offset'] += self.lists[str(ctx.Id())]['offset']
+
         return self.visitChildren(ctx)
 
     '''Esta es la funcion encargada de obtener la informacion de las variables de tipo struct'''
-    def visitStructDeclaration(self, ctx:DecafParser.StructDeclarationContext):
+    def visitStructDeclaration(self, ctx:DECAFParser.StructDeclarationContext):
         # print("----" + str(ctx.parentCtx))
         self.ambito = "struct "
         self.ambito += str(ctx.Id())
@@ -186,4 +201,9 @@ class miVisitor(DecafVisitor):
         # print(len(self.structs))
 
         # print("esta en el " + str(self.ambito))
+        return self.visitChildren(ctx)
+
+    '''Obtener los valores en las declaraciones de variables'''
+    def visitAsign_statement(self, ctx:DECAFParser.Asign_statementContext):
+        print(str(ctx.getText()))
         return self.visitChildren(ctx)

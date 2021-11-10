@@ -3,7 +3,7 @@ from antlr4 import *
 from DECAFLexer import DECAFLexer
 from DECAFParser import DECAFParser
 from miVisitor import miVisitor
-import IntermidiateCode
+# import IntermidiateCode
 
 
 def main(argv):
@@ -16,23 +16,26 @@ def main(argv):
 
     visitor = miVisitor()
     visitor.visit(tree)
+    if visitor.ambito != "global":
+        visitor.interCode = visitor.interCode + "\nEnd " + visitor.ambito
+    print(visitor.interCode)
         
 
-    print('Variables')
-    print(visitor.variables)
-    print('Listas')
-    print(visitor.lists)
-    print('Structs')
-    print(visitor.structs)
-    print('Metodos')
-    print(visitor.metodos)
-    content = ''
-    with open(argv[1]) as f:
-        content = f.readlines()
-    print(content[0])
+    # print('Variables')
+    # print(visitor.variables)
+    # print('Listas')
+    # print(visitor.lists)
+    # print('Structs')
+    # print(visitor.structs)
+    # print('Metodos')
+    # print(visitor.metodos)
+    # content = ''
+    # with open(argv[1]) as f:
+    #     content = f.readlines()
+    # print(content[0])
 
-    codigo_intermedio = IntermidiateCode.Generador(content)
-    IntermidiateCode.printCode(codigo_intermedio)
+    # codigo_intermedio = IntermidiateCode.Generador(content)
+    # IntermidiateCode.printCode(codigo_intermedio)
 
     # print(tree.toStringTree(recog=parser))
 

@@ -278,6 +278,15 @@ class DECAFListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by DECAFParser#elseStmt.
+    def enterElseStmt(self, ctx:DECAFParser.ElseStmtContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#elseStmt.
+    def exitElseStmt(self, ctx:DECAFParser.ElseStmtContext):
+        pass
+
+
     # Enter a parse tree produced by DECAFParser#whileStmt.
     def enterWhileStmt(self, ctx:DECAFParser.WhileStmtContext):
         pass

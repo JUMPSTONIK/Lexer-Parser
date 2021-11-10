@@ -72,7 +72,10 @@ statement
 	;
 
 ifStmt
-	:'if' '(' expression ')' block1 = block ('else' block_else= block)?
+	:'if' '(' expression ')' block1 = block (elseStmt)?
+	;
+elseStmt
+	:'else' block_else= block
 	;
 whileStmt
 	:'while' '(' expression ')' block
@@ -107,7 +110,7 @@ methodCall
 	;
 
 arg
-	:   expression //ya
+	:   Param = expression //ya
 	;
 
 arith_higher_op

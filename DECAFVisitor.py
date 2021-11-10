@@ -159,6 +159,11 @@ class DECAFVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by DECAFParser#elseStmt.
+    def visitElseStmt(self, ctx:DECAFParser.ElseStmtContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by DECAFParser#whileStmt.
     def visitWhileStmt(self, ctx:DECAFParser.WhileStmtContext):
         return self.visitChildren(ctx)

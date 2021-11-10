@@ -1,7 +1,7 @@
 class Program{
 
 int A[10];
-
+int B;
 void main(void){
 
 	int i;

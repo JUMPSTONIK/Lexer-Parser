@@ -95,7 +95,7 @@ expression  //ya
 	|   Num#num_expr												
 	|   CharacterLiteral#charliteral_expr										
 	|   bool_literal#boolliteral_expr
-	|   derecha =expression arith_higher_op izquierda=expression#arith_higher_expr										
+	|   derecha = expression arith_higher_op izquierda=expression#arith_higher_expr										
 	|   derecha =expression arith_op izquierda=expression#arith_op_expr								
 	|   derecha =expression rel_op izquierda=expression#rel_op_expr							
 	|   derecha =expression eq_op izquierda=expression#eq_op_expr									

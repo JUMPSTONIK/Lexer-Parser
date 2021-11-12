@@ -22,8 +22,11 @@ class miVisitor(DECAFVisitor):
         self.metodos = {}
         self.interCode = ""
         self.position = ""
+        self.inOp = False
         self.ifCount = 0
         self.WhileCount = 0
+        self.enviroments = {}
+        self.enviroments['global'] = {"offset": 0}
 
     def visitProgram(self, ctx:DECAFParser.ProgramContext):
         return self.visitChildren(ctx)
@@ -35,7 +38,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
         # print(str(ctx.Id()))
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'int'
@@ -48,7 +54,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'int'
@@ -62,7 +71,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'char'
@@ -75,7 +87,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'char'
@@ -89,7 +104,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'boolean'
@@ -102,7 +120,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'boolean'
@@ -116,7 +137,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito) + "\n"
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'void'
@@ -130,7 +154,10 @@ class miVisitor(DECAFVisitor):
         if self.ambito != "global":
             self.interCode += "\nEnd " + str(self.ambito)
         self.ambito = str(ctx.Id())
+
         self.interCode += "\nDef " + str(ctx.Id())
+
+        self.enviroments[str(ctx.Id())] = {"offset": 0}
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'void'
@@ -142,17 +169,28 @@ class miVisitor(DECAFVisitor):
 
     '''Con esta funcion puedo ir obteniendo cada uno de los parametros de cada funcion'''
     def visitSingle_parameterDeclaration(self, ctx:DECAFParser.Single_parameterDeclarationContext):
-        self.interCode += "\n\tParam " + str(ctx.Id())
+        
+        
+        
+        
         
         self.variables[str(ctx.Id())] = {}
         self.variables[str(ctx.Id())]['tipo'] = ctx.getText()[:-len(str(ctx.Id()))]
         self.variables[str(ctx.Id())]['ambito'] = str(self.ambito)
         # self.variables[str(ctx.Id())]['offset'] = 0
-        self.variables[str(ctx.Id())]['offset'] = TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
+        self.variables[str(ctx.Id())]['offset'] = self.enviroments[self.ambito]['offset']
+        self.enviroments[self.ambito]['offset'] += TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
         self.variables[str(ctx.Id())]['value'] = TYPEINITVALUE[self.variables[str(ctx.Id())]['tipo']]
         
         self.metodos[self.ambito]['params'][str(ctx.Id())] = self.variables[str(ctx.Id())]
         self.metodos[self.ambito]['offset'] += self.variables[str(ctx.Id())]['offset']
+
+        if self.ambito == "global":
+            self.interCode += "\n\tgp[" + str(self.variables[str(ctx.Id())]['offset']) + "] = " + str(self.variables[str(ctx.Id())]['value'])
+        else:
+            self.interCode += "\n\tfp[" + str(self.variables[str(ctx.Id())]['offset']) + "] = " + str(self.variables[str(ctx.Id())]['value'])
+        
+        self.interCode += "\n\tRcparam " + "fp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
 
         return self.visitChildren(ctx)
 
@@ -176,7 +214,9 @@ class miVisitor(DECAFVisitor):
             self.variables[str(ctx.Id())]['offset'] = 0
 
             if("struct" not in self.variables[str(ctx.Id())]['tipo']):
-                self.variables[str(ctx.Id())]['offset'] = TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
+                # self.variables[str(ctx.Id())]['offset'] = TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
+                self.variables[str(ctx.Id())]['offset'] = self.enviroments[self.ambito]['offset']
+                self.enviroments[self.ambito]['offset'] += TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
                 self.variables[str(ctx.Id())]['value'] = TYPEINITVALUE[self.variables[str(ctx.Id())]['tipo']]
             elif("struct" in self.variables[str(ctx.Id())]['tipo']):
                 self.variables[str(ctx.Id())]['offset'] = self.structs[self.variables[str(ctx.Id())]['tipo']]['offset']
@@ -189,6 +229,10 @@ class miVisitor(DECAFVisitor):
         if(self.variables[str(ctx.Id())]['ambito'] != 'global' and "struct" not in self.variables[str(ctx.Id())]['ambito']):
             self.metodos[self.ambito]['offset'] += self.variables[str(ctx.Id())]['offset']
 
+        if self.ambito == "global":
+            self.interCode += "\n\tgp[" + str(self.variables[str(ctx.Id())]['offset']) + "] = " + str(self.variables[str(ctx.Id())]['value'])
+        else:
+            self.interCode += "\n\tfp[" + str(self.variables[str(ctx.Id())]['offset']) + "] = " + str(self.variables[str(ctx.Id())]['value'])
         return self.visitChildren(ctx)
 
     '''Esta es la funcion encargada de obtener la informacion de las variables del tipo lista'''
@@ -240,6 +284,8 @@ class miVisitor(DECAFVisitor):
     # Visit a parse tree produced by DECAFParser#returnStmt.
     def visitReturnStmt(self, ctx:DECAFParser.ReturnStmtContext):
         '''Fix Return '''
+        # print(str(ctx.parentCtx) + " return")
+        # print(str(ctx.getText()))
         self.interCode +=  "\n\tReturn " + ctx.getText()[6: -1]
         return self.visitChildren(ctx)
 
@@ -253,8 +299,8 @@ class miVisitor(DECAFVisitor):
         inter1 = self.interCode[0:self.interCode.rfind("\n")]
         inter2 = self.interCode[self.interCode.rfind("\n"):]
 
-        print(inter1)
-        print(inter2)
+        # print(inter1)
+        # print(inter2)
         self.interCode= inter1 + "\n\tParam " + str(ctx.getText()) + inter2 
         return self.visitChildren(ctx)
 
@@ -263,7 +309,7 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitMethodCall(self, ctx:DECAFParser.MethodCallContext):
-        print(ctx.Id())
+        # print(ctx.Id())
         self.interCode += "\n\tCall " + str(ctx.Id())
         return self.visitChildren(ctx)
 
@@ -282,52 +328,127 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitCond_op_expr(self, ctx:DECAFParser.Cond_op_exprContext):
+
         if self.position == "if":
             self.ifCount += 1
-            self.interCode += "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)
+            self.interCode += "\n\tIFFalse " 
+            #  str(ctx.getText())
+            if self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["ambito"] == "global":
+                self.interCode += "gp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            else:
+                self.interCode += "fp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            self.interCode += " goto FalseIFL" + str(self.ifCount)
         if self.position == "while":
             self.WhileCount += 1
-            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)            
-        self.position = ""
+            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " 
+            if self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["ambito"] == "global":
+                self.interCode += "gp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            else:
+                self.interCode += "fp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            self.interCode += " goto FalseIFL" + str(self.ifCount)
         return self.visitChildren(ctx)
 
     def visitArith_op_expr(self, ctx:DECAFParser.Arith_op_exprContext):
-        if self.position == "if":
-            self.ifCount += 1
-            self.interCode += "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)
-        if self.position == "while":
-            self.WhileCount += 1
-            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)            
-        self.position = ""
         return self.visitChildren(ctx)
 
     def visitArith_higher_expr(self, ctx:DECAFParser.Arith_higher_exprContext):
-        if self.position == "if":
-            self.ifCount += 1
-            self.interCode += "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)
-        if self.position == "while":
-            self.WhileCount += 1
-            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)            
-        self.position = ""
         return self.visitChildren(ctx)
 
     def visitRel_op_expr(self, ctx:DECAFParser.Rel_op_exprContext):
         if self.position == "if":
             self.ifCount += 1
-            self.interCode += "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)
+            self.interCode += "\n\tIFFalse " 
+            #  str(ctx.getText())
+            # if self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["ambito"] == "global":
+            #     self.interCode += "gp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # else:
+            #     self.interCode += "fp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # self.interCode += " goto FalseIFL" + str(self.ifCount)
         if self.position == "while":
             self.WhileCount += 1
-            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)            
-        self.position = ""
+            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " 
+            # if self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["ambito"] == "global":
+            #     self.interCode += "gp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # else:
+            #     self.interCode += "fp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # self.interCode += " goto FalseIFL" + str(self.ifCount)
         return self.visitChildren(ctx)
 
     def visitEq_op_expr(self, ctx:DECAFParser.Eq_op_exprContext):
         if self.position == "if":
             self.ifCount += 1
-            self.interCode += "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)
+            self.interCode += "\n\tIFFalse " 
+            #  str(ctx.getText())
+            # if self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["ambito"] == "global":
+            #     self.interCode += "gp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # else:
+            #     self.interCode += "fp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # self.interCode += " goto FalseIFL" + str(self.ifCount)
         if self.position == "while":
             self.WhileCount += 1
-            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " + str(ctx.getText()) + " goto FalseIFL" + str(self.ifCount)            
-        self.position = ""
+            self.interCode += "\nWhileTrue" + str(self.WhileCount)+ ":" + "\n\tIFFalse " 
+            # if self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["ambito"] == "global":
+            #     self.interCode += "gp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # else:
+            #     self.interCode += "fp[" + str(self.variables[str(ctx.getText())[:str(ctx.getText()).find("=")]]["offset"]) + "]"
+            # self.interCode += " goto FalseIFL" + str(self.ifCount)
         return self.visitChildren(ctx)
+
+    def visitLocation(self, ctx:DECAFParser.LocationContext):
+        if self.position == "if":
+            if self.variables[str(ctx.Id())]["ambito"] == "global":
+                self.interCode += "gp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
+            else:
+                self.interCode += "fp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
+            # self.interCode += " goto FalseIFL" + str(self.ifCount)
+        if self.position == "while":
+            if self.variables[str(ctx.Id())]["ambito"] == "global":
+                self.interCode += "gp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
+            else:
+                self.interCode += "fp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
+            # self.interCode += " goto FalseIFL" + str(self.ifCount)
+        # self.position = ""
+        return self.visitChildren(ctx)
+
+    # Visit a parse tree produced by DECAFParser#rel_op.
+    def visitRel_op(self, ctx:DECAFParser.Rel_opContext):
+        if self.position == "if" or self.position == "while":
+            self.inOp = True
+            self.interCode += " " + str(ctx.getText()) + " "
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DECAFParser#eq_op.
+    def visitEq_op(self, ctx:DECAFParser.Eq_opContext):
+        if self.position == "if" or self.position == "while":
+            self.inOp = True
+            self.interCode += " " + str(ctx.getText()) + " "
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DECAFParser#cond_op.
+    def visitCond_op(self, ctx:DECAFParser.Cond_opContext):
+        if self.position == "if" or self.position == "while":
+            self.inOp = True
+            self.interCode += " " + str(ctx.getText()) + " "
+        return self.visitChildren(ctx)
+
+    def visitNum_expr(self, ctx:DECAFParser.Num_exprContext):
+        if (self.position == "if" or self.position == "while") and self.inOp == True:
+            self.interCode += str(ctx.Num())
+            self.interCode += " goto FalseIFL" + str(self.ifCount)
+            self.position = ""
+            self.inOp = False
+        return self.visitChildren(ctx)
+
+
 #offset es el valor calculado tomando de referencnia desde 0
+    # def visitLocation(self, ctx:DECAFParser.LocationContext):
+    #     print(str(ctx.parentCtx) + " location")
+    #     print(str(ctx.Id()))
+    #     return self.visitChildren(ctx)
+
+    # def visitNum_expr(self, ctx:DECAFParser.Num_exprContext):
+    #     print(str(ctx.parentCtx) + " num")
+    #     print(str(ctx.Num()))
+    #     return self.visitChildren(ctx)

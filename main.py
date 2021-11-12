@@ -29,6 +29,8 @@ def main(argv):
     # print(visitor.structs)
     # print('Metodos')
     # print(visitor.metodos)
+    # print('enviroment')
+    # print(visitor.enviroments)
     # content = ''
     # with open(argv[1]) as f:
     #     content = f.readlines()

@@ -1,14 +1,14 @@
 class Program{
-int B
-#gp[0]
-int A
-#gp[4]
+int a;
+//#gp[0]
+int h;
+//#gp[4]
 void main(void){
 
 	int i;
-	#fp[0]
+	//#fp[0]
 	int c;
-	#fp[4]
+	//#fp[4]
 	i = 0;
 	while(i<=10){
 	}
@@ -16,16 +16,16 @@ void main(void){
 	if (a==3)
 	{
 		int b;
-		b = 5;
+		b = 5  ;
 		OutputInt(b);
 	}
 	Ordenar(i + 1, i);
 	
 }
-
+int y;
 int factorial(int n){
 	int q;
-	#fp[4]
+	//#fp[4]
 	if (n==0){
 		return 1;
 	}
@@ -35,25 +35,25 @@ int factorial(int n){
 }
 
 int InputInt(int x){
-	#fp[0]
+	// #fp[0]
 	int t;
-	#fp[4]
-	t = 1 + B
-	#a = fp[0]
-	#b = fp[4]
-	#c = fp[8]
-	#d = fp[12]
-	a = b + c * d
+	// #fp[4]
+	// t = 1 + B
+	// #a = fp[0]
+	// #b = fp[4]
+	// #c = fp[8]
+	// #d = fp[12]
+	// a = b + c * d
 
-	#fp[4] = 1 + gp[0]
+	// #fp[4] = 1 + gp[0]
 	if (a==3)
 	{
 		int b;
-		#fp[8]
+		// #fp[8]
 		b = 5;
 		OutputInt(b);
 	}
-return 0;
+	return 0;
 }
 
 }

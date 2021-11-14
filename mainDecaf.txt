@@ -15,10 +15,10 @@ void main(void){
 	if (a==3)
 	{
 		int b;
-		b = 5  ;
+		b = 5;
 		OutputInt(b);
 	}
-	Ordenar(i + 1, i);
+	Ordenar(i);
 	}
 }
 int y;
@@ -29,8 +29,8 @@ int factorial(int n){
 		return 1;
 	}
 	else{
-		n = n+n*3;
-		return n*factorial(n-1);
+		q = n*n-3+6+9-a-3;
+		return n*n*factorial(n-1);
 		// return factorial(n-1)*n;
 		
 	}
@@ -52,7 +52,7 @@ int InputInt(int x){
 	{
 		int b;
 		// #fp[8]
-		b = 5;
+		b = a;
 		OutputInt(b);
 	}
 	return t;

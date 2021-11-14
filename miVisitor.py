@@ -28,6 +28,7 @@ class miVisitor(DECAFVisitor):
         self.enviroments = {}
         self.enviroments['global'] = {"offset": 0}
         self.OpCode = []
+        self.OpTemporal = {}
         self.temporalsCount = 0
         self.temporals = {}
         self.closetags = []
@@ -281,6 +282,50 @@ class miVisitor(DECAFVisitor):
         # print("esta en el " + str(self.ambito))
         return self.visitChildren(ctx)
 
+    def visitAsign_statement(self, ctx:DECAFParser.Asign_statementContext):
+        self.position = "asign"
+        expresion = str(ctx.getText())[str(ctx.getText()).find("=")+1:-1]
+        asign = str(ctx.getText())[:str(ctx.getText()).find("=")]
+
+        # print(asign)
+        # print(expresion)
+        if("*" not in expresion and "/" not in expresion and "%" not in expresion and "+" not in expresion and "-" not in expresion and "(" not in expresion):
+            if asign in self.variables:
+                if self.variables[asign]['ambito'] == 'global':
+                    self.interCode += "\n\tgp[" + str(self.variables[asign]['offset']) + "] = "
+                else:
+                    self.interCode += "\n\tfp[" + str(self.variables[asign]['offset']) + "] = "
+                if expresion in self.variables:
+                    if self.variables[expresion]['ambito'] == 'global':
+                        self.interCode += "gp[" + str(self.variables[expresion]['offset']) + "]"
+                    else:
+                        self.interCode += "fp[" + str(self.variables[expresion]['offset']) + "]"
+                    
+                else:
+                    self.interCode += expresion
+            else:
+                if self.variables[asign]['ambito'] == 'global':
+                    self.interCode += "\n\tgp[" + str(self.variables[asign]['offset']) + "] = " + expresion
+                else:
+                    self.interCode += "\n\tfp[" + str(self.variables[asign]['offset']) + "] = " + expresion
+            self.position = ""
+        else:
+            print("true")
+            temp = "t" + str(self.temporalsCount)
+            print(temp)
+            self.position = "asignL"
+            self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
+            self.temporalsCount += 1
+            print(self.OpTemporal)
+            code = "\n\t"
+            if self.variables[asign]['ambito'] == 'global':
+                code += "gp[" + str(self.variables[asign]['offset']) + "] = " + str(list(self.OpTemporal)[-1])
+            else:
+                code += "fp[" + str(self.variables[asign]['offset']) + "] = " + str(list(self.OpTemporal)[-1])
+
+            self.OpCode.insert(0,code)  
+        return self.visitChildren(ctx)
+
     # Visit a parse tree produced by DECAFParser#returnStmt.
     def visitReturnStmt(self, ctx:DECAFParser.ReturnStmtContext):
         self.position = "return"
@@ -299,9 +344,9 @@ class miVisitor(DECAFVisitor):
                 self.position = ""
         else:
             temp = "t" + str(self.temporalsCount)
-            self.temporals[temp] = {'exp1': "", "op": "", 'exp2': ""}
+            self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
             self.temporalsCount += 1
-            self.OpCode.insert(0,"\n\tReturn " + str(list(self.temporals)[-1]))  
+            self.OpCode.insert(0,"\n\tReturn " + str(list(self.OpTemporal)[-1]))  
             # print(self.OpCode)
         return self.visitChildren(ctx)
 
@@ -311,16 +356,16 @@ class miVisitor(DECAFVisitor):
             if("*" not in expresion and "/" not in expresion and "%" not in expresion and "+" not in expresion and "-" not in expresion and "(" not in expresion):
                 if expresion in self.variables:
                     if self.variables[expresion]['ambito'] == 'global':
-                        self.interCode += "\n\tReturn " + "gp[" + str(self.variables[expresion]['offset']) + "]"
+                        self.interCode += "\n\tParam " + "gp[" + str(self.variables[expresion]['offset']) + "]"
                     else:
-                        self.interCode += "\n\tReturn " + "fp[" + str(self.variables[expresion]['offset']) + "]"
-                    self.position = ""
-                    pass
+                        self.interCode += "\n\tParam " + "fp[" + str(self.variables[expresion]['offset']) + "]"
+                    
+                    
                 else:
-                    self.interCode += "\n\tReturn " + expresion
-                    self.position = ""
+                    self.interCode += "\n\tParam " + expresion
+                self.position = ""
             else:
-                self.OpCode.insert(0, "\n\tParam " + str(list(self.temporals)[-1])) 
+                self.OpCode.insert(0, "\n\tParam " + str(list(self.OpTemporal)[-1])) 
                 
         else:
             inter1 = self.interCode[0:self.interCode.rfind("\n")]
@@ -337,25 +382,25 @@ class miVisitor(DECAFVisitor):
     def visitMethodCall(self, ctx:DECAFParser.MethodCallContext):
         # print(ctx.Id())
         if self.position == "return":
-            if self.temporals[list(self.temporals)[-1]]['exp1'] == "" and self.temporals[list(self.temporals)[-1]]['exp2'] == "":
+            if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":
                 pass
-            elif self.temporals[list(self.temporals)[-1]]['exp2'] == "" and self.temporals[list(self.temporals)[-1]]['exp1'] != "":
+            elif self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] != "":
                 #asignamos temporal a la ultima expresion del ultimo temporal
-                print(self.temporals)
-                self.temporals[list(self.temporals)[-1]]['exp2'] = "t" + str(self.temporalsCount)
-                code = "\n\t" + list(self.temporals)[-1] + " = " + self.temporals[list(self.temporals)[-1]]['exp1'] + " " + self.temporals[list(self.temporals)[-1]]['op'] + " " + self.temporals[list(self.temporals)[-1]]['exp2']
+                # print(self.OpTemporal)
+                self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] = "t" + str(self.temporalsCount)
+                code = "\n\t" + list(self.OpTemporal)[-1] + " = " + self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] + " " + self.OpTemporal[list(self.OpTemporal)[-1]]['op'] + " " + self.OpTemporal[list(self.OpTemporal)[-1]]['exp2']
                 self.OpCode.insert(0,code)
                 temp = "t" + str(self.temporalsCount)
-                self.temporals[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
                 
-                self.temporals[temp]['op'] = "Call"
-                self.temporals[temp]['exp2'] = str(ctx.Id())
-                code = "\n\t" + temp + " = " + self.temporals[temp]['op'] + " " + self.temporals[temp]['exp2']
+                self.OpTemporal[temp]['op'] = "Call"
+                self.OpTemporal[temp]['exp2'] = str(ctx.Id())
+                code = "\n\t" + temp + " = " + self.OpTemporal[temp]['op'] + " " + self.OpTemporal[temp]['exp2']
                 self.OpCode.insert(0,code)
                 
                 self.temporalsCount += 1
                 temp = "t" + str(self.temporalsCount)
-                self.temporals[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
         else:
             self.interCode += "\n\tCall " + str(ctx.Id())
         return self.visitChildren(ctx)
@@ -398,13 +443,17 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitArith_higher_op(self, ctx:DECAFParser.Arith_higher_opContext):
-        if self.position == "return":
-            self.temporals[list(self.temporals)[-1]]['op'] = str(ctx.getText())
+        if self.position == "return" or self.position == "asign":
+            self.OpTemporal[list(self.OpTemporal)[-1]]['op'] = str(ctx.getText())
+            print(self.position + " in arith high")
+            print(self.OpTemporal)
         return self.visitChildren(ctx)
 
     def visitArith_op(self, ctx:DECAFParser.Arith_opContext):
-        if self.position == "return":
-            self.temporals[list(self.temporals)[-1]]['op'] = str(ctx.getText())
+        if self.position == "return" or self.position == "asign":
+            self.OpTemporal[list(self.OpTemporal)[-1]]['op'] = str(ctx.getText())
+            print(self.position + " in arith high")
+            print(self.OpTemporal)
         return self.visitChildren(ctx)
 
     def visitRel_op_expr(self, ctx:DECAFParser.Rel_op_exprContext):
@@ -431,31 +480,34 @@ class miVisitor(DECAFVisitor):
                 self.interCode += "gp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
             else:
                 self.interCode += "fp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
-            
-        if self.position == "return":
-            if self.temporals[list(self.temporals)[-1]]['exp1'] == "" and self.temporals[list(self.temporals)[-1]]['exp2'] == "":
+        
+        if self.position == "return" or self.position == "asign":
+            print(self.position + " in Location")
+            print(self.OpTemporal)
+            if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":
                 if self.variables[str(ctx.Id())]['ambito'] == "global":
-                    self.temporals[list(self.temporals)[-1]]['exp1'] = "gp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
+                    self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "gp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
                 else:
-                    self.temporals[list(self.temporals)[-1]]['exp1'] = "fp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
-            elif self.temporals[list(self.temporals)[-1]]['exp2'] == "" and self.temporals[list(self.temporals)[-1]]['exp1'] != "":
+                    self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "fp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
+            elif self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] != "" and self.OpTemporal[list(self.OpTemporal)[-1]]['op'] != "":
                 #asignamos temporal a la ultima expresion del ultimo temporal
                 self.temporalsCount += 1
-                self.temporals[list(self.temporals)[-1]]['exp2'] = "t" + str(self.temporalsCount)
+                self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] = "t" + str(self.temporalsCount)
                 #generamos codigo que ira al OpCode
-                code = "\n\t" + list(self.temporals)[-1] + " = " + self.temporals[list(self.temporals)[-1]]['exp1'] + " " + self.temporals[list(self.temporals)[-1]]['op'] + " " + self.temporals[list(self.temporals)[-1]]['exp2']
+                code = "\n\t" + list(self.OpTemporal)[-1] + " = " + self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] + " " + self.OpTemporal[list(self.OpTemporal)[-1]]['op'] + " " + self.OpTemporal[list(self.OpTemporal)[-1]]['exp2']
                 #creamos nueva temporal
                 temp = "t" + str(self.temporalsCount)
-                self.temporals[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
                 self.temporalsCount += 1
                 #asignamos el valor que visitamos al siguiente temporal
                 if self.variables[str(ctx.Id())]['ambito'] == "global":
-                    self.temporals[list(self.temporals)[-1]]['exp1'] = "gp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
+                    self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "gp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
                 else:
-                    self.temporals[list(self.temporals)[-1]]['exp1'] = "fp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
+                    self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "fp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
                 
                 self.OpCode.insert(0,code)
-                
+        elif self.position == "asignL":
+            self.position = "asign"
         return self.visitChildren(ctx)
 
     def visitNum_expr(self, ctx:DECAFParser.Num_exprContext):
@@ -467,24 +519,28 @@ class miVisitor(DECAFVisitor):
                 self.interCode += " goto FalseWhileL" + str(self.WhileCount)
             self.inOp = False
 
-        if self.position == "return":
-            if self.temporals[list(self.temporals)[-1]]['exp1'] == "" and self.temporals[list(self.temporals)[-1]]['exp2'] == "":    
-                self.temporals[list(self.temporals)[-1]]['exp1'] = str(ctx.Num())
-            elif self.temporals[list(self.temporals)[-1]]['exp2'] == "" and self.temporals[list(self.temporals)[-1]]['exp1'] != "":
+        if self.position == "return" or self.position == "asign":
+            print(self.position + " in Num")
+            print(self.OpTemporal)
+            if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":    
+                self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = str(ctx.Num())
+            elif self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] != "":
                 #asignamos temporal a la ultima expresion del ultimo temporal
                 self.temporalsCount += 1
-                self.temporals[list(self.temporals)[-1]]['exp2'] = "t" + str(self.temporalsCount)
+                self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] = "t" + str(self.temporalsCount)
                 #generamos codigo que ira al OpCode
-                code = "\n\t" + list(self.temporals)[-1] + " = " + self.temporals[list(self.temporals)[-1]]['exp1'] + " " + self.temporals[list(self.temporals)[-1]]['op'] + " " + self.temporals[list(self.temporals)[-1]]['exp2']
+                code = "\n\t" + list(self.OpTemporal)[-1] + " = " + self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] + " " + self.OpTemporal[list(self.OpTemporal)[-1]]['op'] + " " + self.OpTemporal[list(self.OpTemporal)[-1]]['exp2']
                 #creamos nueva temporal
                 temp = "t" + str(self.temporalsCount)
-                self.temporals[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
                 self.temporalsCount += 1
                 #asignamos el valor que visitamos al siguiente temporal
-                self.temporals[list(self.temporals)[-1]]['exp1'] = str(ctx.Num())
+                self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = str(ctx.Num())
                 
                 self.OpCode.insert(0,code)
-
+        elif self.position == "asignL":
+            self.position = "asign"
+        
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by DECAFParser#rel_op.
@@ -511,11 +567,35 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitEndline(self, ctx:DECAFParser.EndlineContext):
-        if self.position == "return":
+        if self.position == "return" or self.position == "asign":
+            # print(list(self.OpTemporal)[-1])
+            if self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == '':
+                # print(self.OpCode[0])
+                # print(list(self.OpTemporal)[-1])
+                # print(self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'])
+                self.OpCode[0] = self.OpCode[0].replace(list(self.OpTemporal)[-1],self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'])
+                self.OpTemporal[list(self.OpTemporal)[-2]]['exp2'] = self.OpTemporal[list(self.OpTemporal)[-1]]['exp1']
+                self.OpTemporal.popitem()
+                self.temporalsCount -= 1
+                # print(self.temporalsCount)
+                # print(self.OpCode[0])
             for line in self.OpCode:
                 self.interCode += line
+            self.temporals.update(self.OpTemporal)
+            # print(self.temporals)
+            self.OpTemporal = {}
+            # print(self.OpTemporal)
             self.OpCode = []
             self.position = ""
+        # elif self.position == "asign":
+        #     for line in self.OpCode:
+        #         self.interCode += line
+        #     self.temporals.update(self.OpTemporal)
+        #     # print(self.temporals)
+        #     self.OpTemporal = {}
+        #     # print(self.OpTemporal)
+        #     self.OpCode = []
+        #     self.position = ""
         return self.visitChildren(ctx)
 
     def visitCloseKey(self, ctx:DECAFParser.CloseKeyContext):
@@ -523,6 +603,6 @@ class miVisitor(DECAFVisitor):
         if "While" in closetag:
             val = closetag[closetag.rfind("L") + 1:-1]
             self.interCode += "\n\tgoto WhileTrue" + str(val)
-            print(val)
+            # print(val)
         self.interCode +=  closetag
         return self.visitChildren(ctx)

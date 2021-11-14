@@ -21,8 +21,8 @@ def main(argv):
     print(visitor.interCode)
         
     
-    # print('Variables')
-    # print(visitor.variables)
+    print('Variables')
+    print(visitor.variables)
     # print('Listas')
     # print(visitor.lists)
     # print('Structs')

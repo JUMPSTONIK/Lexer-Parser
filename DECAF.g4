@@ -14,13 +14,13 @@ declaration
 	;
 	 
 varDeclaration 
-	:vartype=varType Id ';'#normal										
-	|vartype= varType  Id '[' Num ']' ';'#lista
+	:vartype=varType Id endline #normal										
+	|vartype= varType  Id '[' Num ']' endline #lista
 								
 	;
 
 structDeclaration
-	:   'struct' Id '{' (varDeclaration)* '}' 
+	:   'struct' Id '{' (varDeclaration)*  '}'  
 	;
 
 
@@ -56,7 +56,7 @@ parameterType
 	;
 
 block
-	:   '{'(varDeclaration)* (statement)* '}' 
+	:   '{'(varDeclaration)* (statement)*  closeKey  
 	;
 
 
@@ -64,11 +64,11 @@ statement
    	:   ifStmt#ifSt_statement
 	|   whileStmt#while_statement
 	|   returnStmt#return_statement
-	|   methodCall 	';'#method_call_statement									
+	|   methodCall 	endline #method_call_statement									
 	|   block#block_statement														
-	|   location '=' expression';'#asign_statement							
-	|   location '=' '(char)' expression ';'#char_asign_statement						
-	|   (expression)? ';'#unknown_statement										
+	|   location '=' expression endline #asign_statement							
+	|   location '=' '(char)' expression endline#char_asign_statement						
+	|   (expression)? endline#unknown_statement										
 	;
 
 ifStmt
@@ -81,7 +81,7 @@ whileStmt
 	:'while' '(' expression ')' block
 	;
 returnStmt
-	:'return' (expression)? ';'	
+	:'return' (expression)? endline	
 	;
 location  
 	: Id ('.' location)?										
@@ -161,6 +161,14 @@ CharacterLiteral
 fragment
 SingleCharacter
 	:   ~['\\]
+	;
+
+endline
+	: ';'
+	;
+
+closeKey
+	: '}'
 	;
 
 Digit 

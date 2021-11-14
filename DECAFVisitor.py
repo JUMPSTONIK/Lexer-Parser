@@ -284,5 +284,15 @@ class DECAFVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by DECAFParser#endline.
+    def visitEndline(self, ctx:DECAFParser.EndlineContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DECAFParser#closeKey.
+    def visitCloseKey(self, ctx:DECAFParser.CloseKeyContext):
+        return self.visitChildren(ctx)
+
+
 
 del DECAFParser

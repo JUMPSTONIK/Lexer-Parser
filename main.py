@@ -16,11 +16,11 @@ def main(argv):
 
     visitor = miVisitor()
     visitor.visit(tree)
-    if visitor.ambito != "global":
-        visitor.interCode = visitor.interCode + "\nEnd " + visitor.ambito
+    # if visitor.ambito != "global":
+    #     visitor.interCode = visitor.interCode + "\nEnd " + visitor.ambito
     print(visitor.interCode)
         
-
+    
     # print('Variables')
     # print(visitor.variables)
     # print('Listas')
@@ -31,6 +31,8 @@ def main(argv):
     # print(visitor.metodos)
     # print('enviroment')
     # print(visitor.enviroments)
+    print("Temporales")
+    print(visitor.temporals)
     # content = ''
     # with open(argv[1]) as f:
     #     content = f.readlines()

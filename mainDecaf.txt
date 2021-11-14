@@ -11,7 +11,6 @@ void main(void){
 	//#fp[4]
 	i = 0;
 	while(i<=10){
-	}
 
 	if (a==3)
 	{
@@ -20,7 +19,7 @@ void main(void){
 		OutputInt(b);
 	}
 	Ordenar(i + 1, i);
-	
+	}
 }
 int y;
 int factorial(int n){
@@ -30,7 +29,10 @@ int factorial(int n){
 		return 1;
 	}
 	else{
+		n = n+n*3;
 		return n*factorial(n-1);
+		// return factorial(n-1)*n;
+		
 	}
 }
 
@@ -53,7 +55,7 @@ int InputInt(int x){
 		b = 5;
 		OutputInt(b);
 	}
-	return 0;
+	return t;
 }
 
 }

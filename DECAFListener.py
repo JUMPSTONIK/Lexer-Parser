@@ -503,3 +503,21 @@ class DECAFListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by DECAFParser#endline.
+    def enterEndline(self, ctx:DECAFParser.EndlineContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#endline.
+    def exitEndline(self, ctx:DECAFParser.EndlineContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#closeKey.
+    def enterCloseKey(self, ctx:DECAFParser.CloseKeyContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#closeKey.
+    def exitCloseKey(self, ctx:DECAFParser.CloseKeyContext):
+        pass
+
+

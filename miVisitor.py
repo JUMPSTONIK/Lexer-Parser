@@ -22,7 +22,8 @@ class miVisitor(DECAFVisitor):
         self.metodos = {}
         self.interCode = ""
         self.position = ""
-        self.inOp = False
+        self.operandsCount = 0
+        # self.inOp = False
         self.ifCount = 0
         self.WhileCount = 0
         self.enviroments = {}
@@ -32,6 +33,7 @@ class miVisitor(DECAFVisitor):
         self.temporalsCount = 0
         self.temporals = {}
         self.closetags = []
+        self.savedOP = []
 
     def visitProgram(self, ctx:DECAFParser.ProgramContext):
         return self.visitChildren(ctx)
@@ -50,7 +52,7 @@ class miVisitor(DECAFVisitor):
         # print(str(ctx.Id()))
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'int'
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         self.metodos[str(ctx.Id())]['return'] = ''
         # print(ctx.getText())
         return self.visitChildren(ctx)
@@ -67,7 +69,7 @@ class miVisitor(DECAFVisitor):
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'int'
         self.metodos[str(ctx.Id())]['params'] = {}
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         self.metodos[str(ctx.Id())]['return'] = ''
         # print(ctx.getText())
         return self.visitChildren(ctx)
@@ -83,7 +85,7 @@ class miVisitor(DECAFVisitor):
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'char'
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         self.metodos[str(ctx.Id())]['return'] = ''
         # print(ctx.getText())
         return self.visitChildren(ctx)
@@ -100,7 +102,7 @@ class miVisitor(DECAFVisitor):
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'char'
         self.metodos[str(ctx.Id())]['params'] = {}
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         self.metodos[str(ctx.Id())]['return'] = ''
         # print(ctx.getText())
         return self.visitChildren(ctx)
@@ -116,7 +118,7 @@ class miVisitor(DECAFVisitor):
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'boolean'
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         self.metodos[str(ctx.Id())]['return'] = ''
         # print(ctx.getText())
         return self.visitChildren(ctx)
@@ -133,7 +135,7 @@ class miVisitor(DECAFVisitor):
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'boolean'
         self.metodos[str(ctx.Id())]['params'] = {}
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         self.metodos[str(ctx.Id())]['return'] = ''
         # print(ctx.getText())
         return self.visitChildren(ctx)
@@ -149,7 +151,7 @@ class miVisitor(DECAFVisitor):
 
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'void'
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         # print(ctx.Id())
         # print(ctx.getText())
         
@@ -167,14 +169,14 @@ class miVisitor(DECAFVisitor):
         self.metodos[str(ctx.Id())] = {}
         self.metodos[str(ctx.Id())]['tipo'] = 'void'
         self.metodos[str(ctx.Id())]['params'] = {}
-        self.metodos[str(ctx.Id())]['offset'] = 0
+        self.metodos[str(ctx.Id())]['size'] = 0
         # print(ctx.getText())
         
         return self.visitChildren(ctx)
 
     '''Con esta funcion puedo ir obteniendo cada uno de los parametros de cada funcion'''
     def visitSingle_parameterDeclaration(self, ctx:DECAFParser.Single_parameterDeclarationContext):
-        
+        # print(str(ctx.Id()))
         self.variables[str(ctx.Id())] = {}
         self.variables[str(ctx.Id())]['tipo'] = ctx.getText()[:-len(str(ctx.Id()))]
         self.variables[str(ctx.Id())]['ambito'] = str(self.ambito)
@@ -184,7 +186,7 @@ class miVisitor(DECAFVisitor):
         self.variables[str(ctx.Id())]['value'] = TYPEINITVALUE[self.variables[str(ctx.Id())]['tipo']]
         
         self.metodos[self.ambito]['params'][str(ctx.Id())] = self.variables[str(ctx.Id())]
-        self.metodos[self.ambito]['offset'] += self.variables[str(ctx.Id())]['offset']
+        self.metodos[self.ambito]['size'] += TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
 
         if self.ambito == "global":
             self.interCode += "\n\tgp[" + str(self.variables[str(ctx.Id())]['offset']) + "] = " + str(self.variables[str(ctx.Id())]['value'])
@@ -200,9 +202,12 @@ class miVisitor(DECAFVisitor):
     '''
     '''Esta es la funcion encargada de obtener la informacion de las variables int, char, bool'''
     def visitNormal(self, ctx:DECAFParser.NormalContext):
-        
+        print(self.interCode)
+        print(self.ambito)
         if(" " not in str(ctx.parentCtx)):
+            print(self.ambito)
             self.ambito = "global"
+        print(self.ambito)
         # print(str(ctx.Id()))
         # print(len(str(ctx.Id())))
         # print(ctx.getText()[:-len(str(ctx.Id())) - 1])
@@ -228,8 +233,10 @@ class miVisitor(DECAFVisitor):
             self.structs[self.variables[str(ctx.Id())]['ambito']]['offset'] += self.variables[str(ctx.Id())]['offset']
         
         if(self.variables[str(ctx.Id())]['ambito'] != 'global' and "struct" not in self.variables[str(ctx.Id())]['ambito']):
-            self.metodos[self.ambito]['offset'] += self.variables[str(ctx.Id())]['offset']
-
+            self.metodos[self.ambito]['size'] += TYPEVALUES[self.variables[str(ctx.Id())]['tipo']]
+        # print(self.interCode)
+        # print(self.ambito)
+        # print(self.variables)
         if self.ambito == "global":
             self.interCode += "\n\tgp[" + str(self.variables[str(ctx.Id())]['offset']) + "] = " + str(self.variables[str(ctx.Id())]['value'])
         else:
@@ -262,7 +269,7 @@ class miVisitor(DECAFVisitor):
             self.structs[self.lists[str(ctx.Id())]['ambito']]['offset'] += self.lists[str(ctx.Id())]['offset']
         
         if(self.lists[str(ctx.Id())]['ambito'] != 'global' and "struct" not in self.lists[str(ctx.Id())]['ambito']):
-            self.metodos[self.ambito]['offset'] += self.lists[str(ctx.Id())]['offset']
+            self.metodos[self.ambito]['size'] += TYPEVALUES[self.lists[str(ctx.Id())]['tipo']]
 
         return self.visitChildren(ctx)
 
@@ -288,7 +295,7 @@ class miVisitor(DECAFVisitor):
         asign = str(ctx.getText())[:str(ctx.getText()).find("=")]
 
         # print(asign)
-        # print(expresion)
+        # print(expresion + "/////")
         if("*" not in expresion and "/" not in expresion and "%" not in expresion and "+" not in expresion and "-" not in expresion and "(" not in expresion):
             if asign in self.variables:
                 if self.variables[asign]['ambito'] == 'global':
@@ -303,20 +310,34 @@ class miVisitor(DECAFVisitor):
                     
                 else:
                     self.interCode += expresion
+            
             else:
                 if self.variables[asign]['ambito'] == 'global':
                     self.interCode += "\n\tgp[" + str(self.variables[asign]['offset']) + "] = " + expresion
                 else:
                     self.interCode += "\n\tfp[" + str(self.variables[asign]['offset']) + "] = " + expresion
             self.position = ""
+
+        # elif ("*" not in expresion and "/" not in expresion and "%" not in expresion and "+" not in expresion and "-" not in expresion and "(" in expresion):
+        #     print(expresion)
+            
+        #     temp = "t" + str(self.temporalsCount)
+        #     self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
+        #     self.OpTemporal[temp]["op"] = "Call"
+        #     self.OpTemporal[temp]["exp2"] = expresion[:expresion.find("(")]
+        #     self.temporalsCount += 1
+        #     self.interCode += "\n\t" + temp + " = Call " + self.OpTemporal[temp]["exp2"]
+        #     print(self.OpCode)
+        #     print(self.OpTemporal)
+            
         else:
-            print("true")
+            
             temp = "t" + str(self.temporalsCount)
-            print(temp)
+            
             self.position = "asignL"
             self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
             self.temporalsCount += 1
-            print(self.OpTemporal)
+            
             code = "\n\t"
             if self.variables[asign]['ambito'] == 'global':
                 code += "gp[" + str(self.variables[asign]['offset']) + "] = " + str(list(self.OpTemporal)[-1])
@@ -368,21 +389,36 @@ class miVisitor(DECAFVisitor):
                 self.OpCode.insert(0, "\n\tParam " + str(list(self.OpTemporal)[-1])) 
                 
         else:
+            
             inter1 = self.interCode[0:self.interCode.rfind("\n")]
             inter2 = self.interCode[self.interCode.rfind("\n"):]
-
-            if str(ctx.getText()) in self.variables:
-                if self.variables[str(ctx.getText())]['ambito'] == 'global':
-                    self.interCode= inter1 + "\n\tParam " + "gp[" + str(self.variables[str(ctx.getText())]['offset']) + "]" + inter2 
-                else:
-                    self.interCode= inter1 + "\n\tParam " + "fp[" + str(self.variables[str(ctx.getText())]['offset']) + "]" + inter2 
-            
+            if("*" not in str(ctx.getText()) and "/" not in str(ctx.getText()) and "%" not in str(ctx.getText()) and "+" not in str(ctx.getText()) and "-" not in str(ctx.getText()) and "(" not in str(ctx.getText())):
+        
+                if str(ctx.getText()) in self.variables:
+                    if self.variables[str(ctx.getText())]['ambito'] == 'global':
+                        self.interCode= inter1 + "\n\tParam " + "gp[" + str(self.variables[str(ctx.getText())]['offset']) + "]" + inter2 
+                    else:
+                        self.interCode= inter1 + "\n\tParam " + "fp[" + str(self.variables[str(ctx.getText())]['offset']) + "]" + inter2 
+                elif str(ctx.getText()).isnumeric():
+                    pass
         return self.visitChildren(ctx)
 
     def visitMethodCall(self, ctx:DECAFParser.MethodCallContext):
         # print(ctx.Id())
-        if self.position == "return":
+        # print(self.position)
+        if self.position == "return" or self.position == "asign":
+            # print("in return")
             if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":
+                self.temporalsCount -= 1
+                temp = "t" + str(self.temporalsCount)
+                self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                self.OpTemporal[temp]["op"] = "Call"
+                self.OpTemporal[temp]["exp2"] = str(ctx.Id())
+                self.interCode += "\n\t" + temp + " = Call " + str(ctx.Id())
+                self.temporalsCount += 1
+                temp = "t" + str(self.temporalsCount)
+                self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                self.OpTemporal[temp]["exp1"] = "t" + str(self.temporalsCount-1)
                 pass
             elif self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] != "":
                 #asignamos temporal a la ultima expresion del ultimo temporal
@@ -401,8 +437,23 @@ class miVisitor(DECAFVisitor):
                 self.temporalsCount += 1
                 temp = "t" + str(self.temporalsCount)
                 self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
+                if self.OpTemporal["t" + str(self.temporalsCount-1)]["exp1"] == "" and self.OpTemporal["t" + str(self.temporalsCount-2)] == "":
+                    self.OpTemporal[temp]["exp1"] = self.OpTemporal["t" + str(self.temporalsCount-1)]["exp1"]
+                # print(self.OpTemporal)
+        
+        # else:
+        #     if self.position == "asign":
+        #         self.temporalsCount -= 1
+        #         temp = "t" + str(self.temporalsCount)
+        #         self.OpTemporal[temp] = {'exp1': "", "op": "", 'exp2': ""}
+        #         self.OpTemporal[temp]["op"] = "Call"
+        #         self.OpTemporal[temp]["exp2"] = str(ctx.Id())
+        #         self.interCode += "\n\t" + temp + " = Call " + str(ctx.Id())
+        #         self.temporalsCount += 1
         else:
             self.interCode += "\n\tCall " + str(ctx.Id())
+        # print(self.OpCode)
+        # print(self.OpTemporal)
         return self.visitChildren(ctx)
 
     def visitWhileStmt(self, ctx:DECAFParser.WhileStmtContext):
@@ -419,7 +470,7 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitElseStmt(self, ctx:DECAFParser.ElseStmtContext):
-        self.closetags.append("")
+        # self.closetags.append("")
         return self.visitChildren(ctx)
 
     def visitCond_op_expr(self, ctx:DECAFParser.Cond_op_exprContext):
@@ -444,16 +495,22 @@ class miVisitor(DECAFVisitor):
 
     def visitArith_higher_op(self, ctx:DECAFParser.Arith_higher_opContext):
         if self.position == "return" or self.position == "asign":
+            # print(str(self.temporals) + ";;;")
             self.OpTemporal[list(self.OpTemporal)[-1]]['op'] = str(ctx.getText())
-            print(self.position + " in arith high")
-            print(self.OpTemporal)
+            # print(self.position + " in arith high")
+            # print(self.OpTemporal)
+
         return self.visitChildren(ctx)
 
     def visitArith_op(self, ctx:DECAFParser.Arith_opContext):
         if self.position == "return" or self.position == "asign":
+            print(str(ctx.getText()))
+            
             self.OpTemporal[list(self.OpTemporal)[-1]]['op'] = str(ctx.getText())
-            print(self.position + " in arith high")
-            print(self.OpTemporal)
+            # print(self.position + " in arith high")
+            # print(self.OpTemporal)
+            self.savedOP.append(str(ctx.getText()))
+            # print(str(self.temporals) + ";;;")
         return self.visitChildren(ctx)
 
     def visitRel_op_expr(self, ctx:DECAFParser.Rel_op_exprContext):
@@ -480,10 +537,17 @@ class miVisitor(DECAFVisitor):
                 self.interCode += "gp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
             else:
                 self.interCode += "fp[" + str(self.variables[str(ctx.Id())]["offset"]) + "]"
+            self.operandsCount += 1
+            if self.operandsCount >= 2:
+                if self.position == "if":
+                    self.interCode += " goto FalseIfL" + str(self.ifCount)
+                if self.position == "while":
+                    self.interCode += " goto FalseWhileL" + str(self.WhileCount)
+                self.operandsCount = 0
         
-        if self.position == "return" or self.position == "asign":
-            print(self.position + " in Location")
-            print(self.OpTemporal)
+        elif self.position == "return" or self.position == "asign":
+            # print(self.position + " in Location")
+            # print(self.OpTemporal)
             if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":
                 if self.variables[str(ctx.Id())]['ambito'] == "global":
                     self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "gp[" + str(self.variables[str(ctx.Id())]['offset']) + "]"
@@ -511,17 +575,20 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitNum_expr(self, ctx:DECAFParser.Num_exprContext):
-        if (self.position == "if" or self.position == "while") and self.inOp == True:
+        if (self.position == "if" or self.position == "while"):
             self.interCode += str(ctx.Num())
-            if self.position == "if":
-                self.interCode += " goto FalseIfL" + str(self.ifCount)
-            if self.position == "while":
-                self.interCode += " goto FalseWhileL" + str(self.WhileCount)
-            self.inOp = False
+            self.operandsCount += 1
+            if self.operandsCount >= 2:
+                if self.position == "if":
+                    self.interCode += " goto FalseIfL" + str(self.ifCount)
+                if self.position == "while":
+                    self.interCode += " goto FalseWhileL" + str(self.WhileCount)
+                self.operandsCount = 0
+            
 
         if self.position == "return" or self.position == "asign":
-            print(self.position + " in Num")
-            print(self.OpTemporal)
+            # print(self.position + " in Num")
+            # print(self.OpTemporal)
             if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":    
                 self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = str(ctx.Num())
             elif self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] != "":
@@ -546,7 +613,7 @@ class miVisitor(DECAFVisitor):
     # Visit a parse tree produced by DECAFParser#rel_op.
     def visitRel_op(self, ctx:DECAFParser.Rel_opContext):
         if self.position == "if" or self.position == "while":
-            self.inOp = True
+            # self.inOp = True
             self.interCode += " " + str(ctx.getText()) + " "
         return self.visitChildren(ctx)
 
@@ -554,7 +621,7 @@ class miVisitor(DECAFVisitor):
     # Visit a parse tree produced by DECAFParser#eq_op.
     def visitEq_op(self, ctx:DECAFParser.Eq_opContext):
         if self.position == "if" or self.position == "while":
-            self.inOp = True
+            # self.inOp = True
             self.interCode += " " + str(ctx.getText()) + " "
         return self.visitChildren(ctx)
 
@@ -562,19 +629,23 @@ class miVisitor(DECAFVisitor):
     # Visit a parse tree produced by DECAFParser#cond_op.
     def visitCond_op(self, ctx:DECAFParser.Cond_opContext):
         if self.position == "if" or self.position == "while":
-            self.inOp = True
+            # self.inOp = True
             self.interCode += " " + str(ctx.getText()) + " "
         return self.visitChildren(ctx)
 
     def visitEndline(self, ctx:DECAFParser.EndlineContext):
         if self.position == "return" or self.position == "asign":
-            # print(list(self.OpTemporal)[-1])
+            # print(self.OpCode)
+            # print(self.OpTemporal)
             if self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == '':
                 # print(self.OpCode[0])
                 # print(list(self.OpTemporal)[-1])
                 # print(self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'])
                 self.OpCode[0] = self.OpCode[0].replace(list(self.OpTemporal)[-1],self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'])
-                self.OpTemporal[list(self.OpTemporal)[-2]]['exp2'] = self.OpTemporal[list(self.OpTemporal)[-1]]['exp1']
+                try:
+                    self.OpTemporal[list(self.OpTemporal)[-2]]['exp2'] = self.OpTemporal[list(self.OpTemporal)[-1]]['exp1']
+                except:
+                    pass
                 self.OpTemporal.popitem()
                 self.temporalsCount -= 1
                 # print(self.temporalsCount)
@@ -587,6 +658,10 @@ class miVisitor(DECAFVisitor):
             # print(self.OpTemporal)
             self.OpCode = []
             self.position = ""
+        else:
+            print(self.temporals)
+            print(self.OpCode)
+            print(self.position)
         # elif self.position == "asign":
         #     for line in self.OpCode:
         #         self.interCode += line
@@ -596,13 +671,28 @@ class miVisitor(DECAFVisitor):
         #     # print(self.OpTemporal)
         #     self.OpCode = []
         #     self.position = ""
+        # print(self.ambito)
+        # print(self.interCode)
+        self.OpTemporal = {}
+        # print(self.OpTemporal)
+        self.OpCode = []
+        self.position = ""
         return self.visitChildren(ctx)
 
     def visitCloseKey(self, ctx:DECAFParser.CloseKeyContext):
+        # print(self.closetags)
         closetag = self.closetags.pop()
         if "While" in closetag:
             val = closetag[closetag.rfind("L") + 1:-1]
             self.interCode += "\n\tgoto WhileTrue" + str(val)
             # print(val)
+        elif "FalseIf" in closetag:
+            val = closetag[closetag.rfind("L") + 1:-1]
+            self.interCode += "\n\tgoto TrueIfL" + val
+            gotoTrueIF = "\nTrueIfL" + val +":"
+            # print(gotoTrueIF)
+            self.closetags.append(gotoTrueIF)
+        
         self.interCode +=  closetag
+        # print(self.closetags)
         return self.visitChildren(ctx)

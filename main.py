@@ -2,6 +2,7 @@ import sys
 from antlr4 import *
 from DECAFLexer import DECAFLexer
 from DECAFParser import DECAFParser
+from codeGenerator import codeGenerator
 from miVisitor import miVisitor
 # import IntermidiateCode
 
@@ -12,17 +13,13 @@ def main(argv):
     stream = CommonTokenStream(lexer)
     parser = DECAFParser(stream)
     tree = parser.program()
-    
+    # print(tree.toStringTree(recog=parser))
 
     visitor = miVisitor()
     visitor.visit(tree)
-    # if visitor.ambito != "global":
-    #     visitor.interCode = visitor.interCode + "\nEnd " + visitor.ambito
-    print(visitor.interCode)
-        
     
-    print('Variables')
-    print(visitor.variables)
+    # print('Variables')
+    # print(visitor.variables)
     # print('Listas')
     # print(visitor.lists)
     # print('Structs')
@@ -31,17 +28,21 @@ def main(argv):
     # print(visitor.metodos)
     # print('enviroment')
     # print(visitor.enviroments)
-    print("Temporales")
-    print(visitor.temporals)
-    # content = ''
-    # with open(argv[1]) as f:
-    #     content = f.readlines()
-    # print(content[0])
-
-    # codigo_intermedio = IntermidiateCode.Generador(content)
-    # IntermidiateCode.printCode(codigo_intermedio)
-
-    # print(tree.toStringTree(recog=parser))
+    # print("Temporales")
+    # print(visitor.temporals)
+    
+    # print(visitor.interCode)
+    textIntermedio=open("CodigoIntermedio.txt","w") 
+    textIntermedio.write(visitor.interCode)
+    textIntermedio.close()
+    
+    with open('CodigoIntermedio.txt') as f:
+        lines = f.readlines()
+    # print(lines)
+    ARM = codeGenerator(lines)
+    ARMCode=open("ARM.txt","w") 
+    ARMCode.write(ARM) 
+    ARMCode.close()
 
 if __name__ == '__main__':
     main(sys.argv)

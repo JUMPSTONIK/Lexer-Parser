@@ -1,0 +1,32 @@
+
+Def main
+	fp[0] = 0
+	fp[4] = 0
+	fp[8] = 0
+	Param fp[4]
+	t0 = Call factorial
+	t1 = t0 + 1
+	fp[4] = t0
+	t2 = fp[4] + 999
+	fp[0] = t2
+	IFFalse fp[4] > fp[8] goto FalseIfL1
+	fp[0] = 0
+	goto TrueIfL1
+FalseIfL1:
+TrueIfL1:
+Def factorial
+	fp[0] = 0
+	Rcparam fp[0]
+	IFFalse fp[0] == 0 goto FalseIfL2
+	Return 1
+	goto TrueIfL2
+FalseIfL2:
+	fp[4] = 0
+	fp[4] = 5
+	t6 = fp[0] - 1
+	Param t6
+	t5 = Call factorial
+	t4 = fp[0] * t5
+	Return t4
+TrueIfL2:
+End factorial

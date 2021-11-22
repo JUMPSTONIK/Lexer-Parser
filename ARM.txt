@@ -1,0 +1,43 @@
+.data
+.text
+.global main
+main:
+	mov r6, #0
+	mov r7, #0
+	str R6, [r7]
+	mov r6, #0
+	mov r7, #4
+	str R6, [r7]
+	mov r6, #0
+	mov r7, #8
+	str R6, [r7]
+	mov r7, #4
+	ldr r10, [r7]
+	mov r7, #8
+	ldr r9, [r7]
+	cmp r10, r9
+	ble FalseIfL1
+	mov r6, #0
+	mov r7, #0
+	str R6, [r7]
+	b TrueIfL1
+FalseIfL1:
+TrueIfL1:
+factorial:
+	mov r6, #0
+	mov r7, #0
+	str R6, [r7]
+	mov r7, #0
+	ldr r10, [r7]
+	cmp r10, #0
+	bne FalseIfL2
+	b TrueIfL2
+FalseIfL2:
+	mov r6, #0
+	mov r7, #4
+	str R6, [r7]
+	mov r6, #5
+	mov r7, #4
+	str R6, [r7]
+TrueIfL2:
+	bx lr

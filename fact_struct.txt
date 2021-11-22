@@ -1,36 +1,31 @@
 class Program
 {
-struct A
+
+void main()
 {
 	int a;
-};
-
-struct B
-{
 	int b;
-	struct A c;
-};
-
+	int c;
+	b = factorial(b)+1;
+	a = b + 999;
+	// a = factorial(9);
+	if(b>c){
+		a = 0;
+	}
+}
 
 int factorial(int n)
 {
-	if (n==0)
-	{
+	if (n==0){
 		return 1;
+		
 	}
-	else
-	{
+	else{
+		int q;
+		q = 5;
 		return n*factorial(n-1);
+		
 	}
-
 }
-
-void main(void)
-{
-	struct B y;
-	y.b = 5;
-	y.c.a = factorial(y.b);
-}
-
 
 }

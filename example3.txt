@@ -1,7 +1,6 @@
 class Program
 {
 	int a;
-	
 	void main()
 	{
 		while (a < 10)
@@ -12,10 +11,9 @@ class Program
 
 	int f(int c)
 	{
-		// int a;
+		int a;
 		int b;
-		b = 5;
-		if (a < 10)
+		if (a<10)
 		{
 			a = a + b*c + 1;
 		}

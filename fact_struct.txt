@@ -16,14 +16,15 @@ void main()
 
 int factorial(int n)
 {
+	
+	int q;
 	if (n==0){
 		return 1;
 		
 	}
 	else{
-		int q;
 		q = 5;
-		return n*factorial(n-1);
+		return n*factorial(n,0,n,6);
 		
 	}
 }

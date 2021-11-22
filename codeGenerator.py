@@ -49,7 +49,7 @@ def codeGenerator(codeLines):
                         ARMCODE += "\n\tldr " + varname + ", #" + code[2]
                         # ARMCODE += "\n\tstr " + code[2] +", [R10]"
                 elif "fp" in code[0] and code[2].isnumeric():
-                    print(line)
+                    # print(line)
                     offset = code[0][code[0].find("[")+1:-1]
                     # varname = "fp" + offset
                     # print(list(localVars[ambito]))
@@ -62,8 +62,8 @@ def codeGenerator(codeLines):
                         # print("im inside")
                     # localVars[ambito][code[0]]['value'] = code[2]
                     ARMCODE += "\n\tmov r6, #" + code[2]
-                    ARMCODE += "\n\tmov r7, #" + offset
-                    ARMCODE += "\n\tstr " + "R6" +", [r7]"
+                    ARMCODE += "\n\tmov r5, #" + offset
+                    ARMCODE += "\n\tstr " + "R6" +", [r5]"
                 # elif "t" in code[0] and code[2] == "Call":
 
             if len(code) == 6:
@@ -74,8 +74,8 @@ def codeGenerator(codeLines):
                         ARMCODE += "\n\tldr r10, " + varname
                     elif "fp" in code[1]:
                         offset = code[1][code[1].find("[")+1:-1]
-                        ARMCODE += "\n\tmov r7, #" + offset
-                        ARMCODE += "\n\tldr r10, " + "[r7]"
+                        ARMCODE += "\n\tmov r5, #" + offset
+                        ARMCODE += "\n\tldr r10, " + "[r5]"
 
                     if "gp" in code[3]:
                         offset = code[3][code[3].find("[")+1:-1]
@@ -83,8 +83,8 @@ def codeGenerator(codeLines):
                         ARMCODE += "\n\tldr r9, " + varname
                     elif "fp" in code[3]:
                         offset = code[3][code[3].find("[")+1:-1]
-                        ARMCODE += "\n\tmov r7, #" + offset
-                        ARMCODE += "\n\tldr r9, " + "[r7]"
+                        ARMCODE += "\n\tmov r5, #" + offset
+                        ARMCODE += "\n\tldr r9, " + "[r5]"
 
                     if ("gp" in code[1] or "fp" in code[1]) and ("gp" in code[3] or "fp" in code[3]):
                         ARMCODE += "\n\tcmp r10, r9"

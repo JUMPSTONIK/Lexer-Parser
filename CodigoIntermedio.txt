@@ -17,16 +17,13 @@ TrueIfL1:
 Def factorial
 	fp[0] = 0
 	Rcparam fp[0]
+	fp[4] = 0
 	IFFalse fp[0] == 0 goto FalseIfL2
 	Return 1
 	goto TrueIfL2
 FalseIfL2:
-	fp[4] = 0
 	fp[4] = 5
-	t6 = fp[0] - 1
-	Param t6
-	t5 = Call factorial
-	t4 = fp[0] * t5
-	Return t4
+	Param fp[0]
+	Param fp[0]
 TrueIfL2:
 End factorial

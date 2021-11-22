@@ -202,8 +202,8 @@ class miVisitor(DECAFVisitor):
     '''
     '''Esta es la funcion encargada de obtener la informacion de las variables int, char, bool'''
     def visitNormal(self, ctx:DECAFParser.NormalContext):
-        print(self.interCode)
-        print(self.ambito)
+        # print(self.interCode)
+        # print(self.ambito)
         if(" " not in str(ctx.parentCtx)):
             print(self.ambito)
             self.ambito = "global"
@@ -392,14 +392,16 @@ class miVisitor(DECAFVisitor):
             
             inter1 = self.interCode[0:self.interCode.rfind("\n")]
             inter2 = self.interCode[self.interCode.rfind("\n"):]
+            
             if("*" not in str(ctx.getText()) and "/" not in str(ctx.getText()) and "%" not in str(ctx.getText()) and "+" not in str(ctx.getText()) and "-" not in str(ctx.getText()) and "(" not in str(ctx.getText())):
-        
+                print(str(ctx.getText()))
                 if str(ctx.getText()) in self.variables:
                     if self.variables[str(ctx.getText())]['ambito'] == 'global':
                         self.interCode= inter1 + "\n\tParam " + "gp[" + str(self.variables[str(ctx.getText())]['offset']) + "]" + inter2 
                     else:
                         self.interCode= inter1 + "\n\tParam " + "fp[" + str(self.variables[str(ctx.getText())]['offset']) + "]" + inter2 
                 elif str(ctx.getText()).isnumeric():
+                    '''Aqui se arregla el enviar parametros numericos'''
                     pass
         return self.visitChildren(ctx)
 
@@ -659,9 +661,9 @@ class miVisitor(DECAFVisitor):
             self.OpCode = []
             self.position = ""
         else:
-            print(self.temporals)
-            print(self.OpCode)
-            print(self.position)
+            # print(self.temporals)
+            # print(self.OpCode)
+            # print(self.position)
         # elif self.position == "asign":
         #     for line in self.OpCode:
         #         self.interCode += line
@@ -673,6 +675,7 @@ class miVisitor(DECAFVisitor):
         #     self.position = ""
         # print(self.ambito)
         # print(self.interCode)
+            pass
         self.OpTemporal = {}
         # print(self.OpTemporal)
         self.OpCode = []
@@ -680,7 +683,7 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitCloseKey(self, ctx:DECAFParser.CloseKeyContext):
-        # print(self.closetags)
+        print(self.closetags)
         closetag = self.closetags.pop()
         if "While" in closetag:
             val = closetag[closetag.rfind("L") + 1:-1]

@@ -18,10 +18,10 @@ def main(argv):
     visitor = miVisitor()
     visitor.visit(tree)
     
-    # print('Variables')
-    # print(visitor.variables)
-    # print('Listas')
-    # print(visitor.lists)
+    print('Variables')
+    print(visitor.variables)
+    print('Listas')
+    print(visitor.lists)
     # print('Structs')
     # print(visitor.structs)
     # print('Metodos')
@@ -39,9 +39,9 @@ def main(argv):
     with open('CodigoIntermedio.txt') as f:
         lines = f.readlines()
     # print(lines)
-    ARM = codeGenerator(lines)
-    ARMCode=open("ARM.txt","w") 
-    ARMCode.write(ARM) 
+    MIPS = codeGenerator(lines)
+    ARMCode=open("MIPS.txt","w") 
+    ARMCode.write(MIPS) 
     ARMCode.close()
 
 if __name__ == '__main__':

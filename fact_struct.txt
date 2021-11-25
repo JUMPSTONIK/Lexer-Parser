@@ -1,31 +1,38 @@
 class Program
 {
+int c[5];
+
 
 void main()
 {
 	int a;
 	int b;
-	int c;
-	b = factorial(b)+1;
-	a = b + 999;
-	// a = factorial(9);
-	if(b>c){
+	
+	// int c[5];
+	factorial(n+1);
+	c[0] = c[1] * c[3];
+	
+	if(c[a]>8){
 		a = 0;
 	}
 }
 
 int factorial(int n)
 {
-	
-	int q;
-	if (n==0){
-		return 1;
-		
-	}
-	else{
-		q = 5;
-		return n*factorial(n,0,n,6);
-		
+	int j[5];
+	n = n + 1;
+	c[0] = c[2];
+	j[n] = c[1];
+	while(c[n]<5){
+		int d;
+		if (n==0){
+			return 1;
+			
+		}
+		else{
+			return n*factorial(n-1);
+			
+		}
 	}
 }
 

@@ -22,7 +22,7 @@ def codeGenerator(codeLines):
                 if code[0][-1] == ":":
                     ARMCODE += "\n" + code[0]
 
-            if len(code) == 2:
+            elif len(code) == 2:
 
                 if code[0] == "Def":
                     ARMCODE += "\n" + code[1] + ":"
@@ -36,7 +36,7 @@ def codeGenerator(codeLines):
                         ARMCODE += "\n\tbx lr"
                 elif code[0] == 'goto':
                     ARMCODE += "\n\tb " + code[1]
-            if len(code) == 3: 
+            elif len(code) == 3: 
                 if "gp" in code[0] and code[2].isnumeric():
                     offset = code[0][code[0].find("[")+1:-1]
                     varname = "gp" + offset
@@ -65,35 +65,43 @@ def codeGenerator(codeLines):
                     ARMCODE += "\n\tmov r5, #" + offset
                     ARMCODE += "\n\tstr " + "R6" +", [r5]"
                 # elif "t" in code[0] and code[2] == "Call":
+            elif len(code) == 4:
+                if "[" in code[0]:
+                    nameVar = code[0][:code[0].find("[")]
+                    print(nameVar)
+                    GLOBAL += "\n" + nameVar + " .word 0" + (",0" * (int(code[-1])-1))
+                # print(code)
 
-            if len(code) == 6:
 
-                    if "gp" in code[1]:
-                        offset = code[1][code[1].find("[")+1:-1]
-                        varname = "gp" + offset
-                        ARMCODE += "\n\tldr r10, " + varname
-                    elif "fp" in code[1]:
-                        offset = code[1][code[1].find("[")+1:-1]
-                        ARMCODE += "\n\tmov r5, #" + offset
-                        ARMCODE += "\n\tldr r10, " + "[r5]"
 
-                    if "gp" in code[3]:
-                        offset = code[3][code[3].find("[")+1:-1]
-                        varname = "gp" + offset
-                        ARMCODE += "\n\tldr r9, " + varname
-                    elif "fp" in code[3]:
-                        offset = code[3][code[3].find("[")+1:-1]
-                        ARMCODE += "\n\tmov r5, #" + offset
-                        ARMCODE += "\n\tldr r9, " + "[r5]"
+            elif len(code) == 6:
 
-                    if ("gp" in code[1] or "fp" in code[1]) and ("gp" in code[3] or "fp" in code[3]):
-                        ARMCODE += "\n\tcmp r10, r9"
-                    elif ("gp" in code[1] or "fp" in code[1]) and ("gp" not in code[3] or "fp" not in code[3]):
-                        ARMCODE += "\n\tcmp r10, #" + code[3]
-                    elif ("gp" not in code[1] or "fp" not in code[1]) and ("gp" in code[3] or "fp" in code[3]):
-                        ARMCODE += "\n\tcmp #" + code[1] + ", r9" 
+                if "gp" in code[1]:
+                    offset = code[1][code[1].find("[")+1:-1]
+                    varname = "gp" + offset
+                    ARMCODE += "\n\tldr r10, " + varname
+                elif "fp" in code[1]:
+                    offset = code[1][code[1].find("[")+1:-1]
+                    ARMCODE += "\n\tmov r5, #" + offset
+                    ARMCODE += "\n\tldr r10, " + "[r5]"
 
-                    ARMCODE += "\n\t" + FALSECONDS[code[2]] + " " + code[-1]                    
+                if "gp" in code[3]:
+                    offset = code[3][code[3].find("[")+1:-1]
+                    varname = "gp" + offset
+                    ARMCODE += "\n\tldr r9, " + varname
+                elif "fp" in code[3]:
+                    offset = code[3][code[3].find("[")+1:-1]
+                    ARMCODE += "\n\tmov r5, #" + offset
+                    ARMCODE += "\n\tldr r9, " + "[r5]"
+
+                if ("gp" in code[1] or "fp" in code[1]) and ("gp" in code[3] or "fp" in code[3]):
+                    ARMCODE += "\n\tcmp r10, r9"
+                elif ("gp" in code[1] or "fp" in code[1]) and ("gp" not in code[3] or "fp" not in code[3]):
+                    ARMCODE += "\n\tcmp r10, #" + code[3]
+                elif ("gp" not in code[1] or "fp" not in code[1]) and ("gp" in code[3] or "fp" in code[3]):
+                    ARMCODE += "\n\tcmp #" + code[1] + ", r9" 
+
+                ARMCODE += "\n\t" + FALSECONDS[code[2]] + " " + code[-1]                    
 
 
                     

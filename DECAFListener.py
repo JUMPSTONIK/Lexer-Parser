@@ -305,12 +305,21 @@ class DECAFListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by DECAFParser#location.
-    def enterLocation(self, ctx:DECAFParser.LocationContext):
+    # Enter a parse tree produced by DECAFParser#normal_location.
+    def enterNormal_location(self, ctx:DECAFParser.Normal_locationContext):
         pass
 
-    # Exit a parse tree produced by DECAFParser#location.
-    def exitLocation(self, ctx:DECAFParser.LocationContext):
+    # Exit a parse tree produced by DECAFParser#normal_location.
+    def exitNormal_location(self, ctx:DECAFParser.Normal_locationContext):
+        pass
+
+
+    # Enter a parse tree produced by DECAFParser#array_location.
+    def enterArray_location(self, ctx:DECAFParser.Array_locationContext):
+        pass
+
+    # Exit a parse tree produced by DECAFParser#array_location.
+    def exitArray_location(self, ctx:DECAFParser.Array_locationContext):
         pass
 
 

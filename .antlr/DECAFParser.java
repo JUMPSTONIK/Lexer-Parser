@@ -1358,17 +1358,32 @@ public class DECAFParser extends Parser {
 	}
 
 	public static class LocationContext extends ParserRuleContext {
-		public TerminalNode Id() { return getToken(DECAFParser.Id, 0); }
-		public LocationContext location() {
-			return getRuleContext(LocationContext.class,0);
-		}
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
 		public LocationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_location; }
+	 
+		public LocationContext() { }
+		public void copyFrom(LocationContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class Normal_locationContext extends LocationContext {
+		public TerminalNode Id() { return getToken(DECAFParser.Id, 0); }
+		public LocationContext location() {
+			return getRuleContext(LocationContext.class,0);
+		}
+		public Normal_locationContext(LocationContext ctx) { copyFrom(ctx); }
+	}
+	public static class Array_locationContext extends LocationContext {
+		public TerminalNode Id() { return getToken(DECAFParser.Id, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public LocationContext location() {
+			return getRuleContext(LocationContext.class,0);
+		}
+		public Array_locationContext(LocationContext ctx) { copyFrom(ctx); }
 	}
 
 	public final LocationContext location() throws RecognitionException {
@@ -1379,6 +1394,7 @@ public class DECAFParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
 			case 1:
+				_localctx = new Normal_locationContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(249);
@@ -1398,6 +1414,7 @@ public class DECAFParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new Array_locationContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(254);

@@ -174,8 +174,13 @@ class DECAFVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by DECAFParser#location.
-    def visitLocation(self, ctx:DECAFParser.LocationContext):
+    # Visit a parse tree produced by DECAFParser#normal_location.
+    def visitNormal_location(self, ctx:DECAFParser.Normal_locationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DECAFParser#array_location.
+    def visitArray_location(self, ctx:DECAFParser.Array_locationContext):
         return self.visitChildren(ctx)
 
 

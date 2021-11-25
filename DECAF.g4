@@ -84,8 +84,8 @@ returnStmt
 	:'return' (expression)? endline	
 	;
 location  
-	: Id ('.' location)?										
-	| Id '[' expression ']' ('.' location)?						
+	: Id ('.' location)? #normal_location										
+	| Id '[' expression ']' ('.' location)?	#array_location					
 	;
 
 

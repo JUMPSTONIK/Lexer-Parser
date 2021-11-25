@@ -2090,34 +2090,71 @@ class DECAFParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
+
+        def getRuleIndex(self):
+            return DECAFParser.RULE_location
+
+     
+        def copyFrom(self, ctx:ParserRuleContext):
+            super().copyFrom(ctx)
+
+
+
+    class Normal_locationContext(LocationContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.LocationContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
         def Id(self):
             return self.getToken(DECAFParser.Id, 0)
+        def location(self):
+            return self.getTypedRuleContext(DECAFParser.LocationContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterNormal_location" ):
+                listener.enterNormal_location(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitNormal_location" ):
+                listener.exitNormal_location(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitNormal_location" ):
+                return visitor.visitNormal_location(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class Array_locationContext(LocationContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a DECAFParser.LocationContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def Id(self):
+            return self.getToken(DECAFParser.Id, 0)
+        def expression(self):
+            return self.getTypedRuleContext(DECAFParser.ExpressionContext,0)
 
         def location(self):
             return self.getTypedRuleContext(DECAFParser.LocationContext,0)
 
 
-        def expression(self):
-            return self.getTypedRuleContext(DECAFParser.ExpressionContext,0)
-
-
-        def getRuleIndex(self):
-            return DECAFParser.RULE_location
-
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterLocation" ):
-                listener.enterLocation(self)
+            if hasattr( listener, "enterArray_location" ):
+                listener.enterArray_location(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitLocation" ):
-                listener.exitLocation(self)
+            if hasattr( listener, "exitArray_location" ):
+                listener.exitArray_location(self)
 
         def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitLocation" ):
-                return visitor.visitLocation(self)
+            if hasattr( visitor, "visitArray_location" ):
+                return visitor.visitArray_location(self)
             else:
                 return visitor.visitChildren(self)
-
 
 
 
@@ -2130,6 +2167,7 @@ class DECAFParser ( Parser ):
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,23,self._ctx)
             if la_ == 1:
+                localctx = DECAFParser.Normal_locationContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 249
                 self.match(DECAFParser.Id)
@@ -2146,6 +2184,7 @@ class DECAFParser ( Parser ):
                 pass
 
             elif la_ == 2:
+                localctx = DECAFParser.Array_locationContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 254
                 self.match(DECAFParser.Id)

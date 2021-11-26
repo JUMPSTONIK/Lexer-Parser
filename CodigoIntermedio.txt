@@ -1,83 +1,34 @@
 
-	A[0] = 0, 10
-	gp[40] = 0
+Def factorial
+	fp[0] = 0
+	Rcparam fp[0]
+	IFFalse fp[0] == 0 goto FalseIfL1
+	Return 1
+	goto TrueIfL1
+FalseIfL1:
+	t2 = fp[0] - 1
+	Param t2
+	t1 = Call factorial
+	t0 = fp[0] * t1
+	Return t0
+TrueIfL1:
+End factorial
+
 Def main
 	fp[0] = 0
 	fp[0] = 0
 WhileTrue1:
-	IFFalse fp[0] < 10 goto FalseWhileL1
-	t0 = Call InputInt
-	TL = 4 * fp[0]
-	A[TL] = t0
-	t0 = fp[0] + 1
-	fp[0] = t0
+	IFFalse fp[0] < 5 goto FalseWhileL1
+	Call OutputInt
+	Param fp[0]
+	Call factorial
+	t3 = fp[0] + 1
+	fp[0] = t3
 	goto WhileTrue1
 FalseWhileL1:
-	Call Ordenar
-	fp[0] = 0
-WhileTrue2:
-	IFFalse fp[0] < 10 goto FalseWhileL2
-	TR = 4 * fp[0]
-	Param A[TR]
-	Call OutputInt
-	t2 = fp[0] + 1
-	fp[0] = t2
-	goto WhileTrue2
-FalseWhileL2:
 End main
-
-Def Ordenar
-	fp[0] = 0
-	fp[4] = 0
-	fp[8] = 0
-	fp[0] = 0
-WhileTrue3:
-	IFFalse fp[0] < 10 goto FalseWhileL3
-	fp[12] = 0
-	Param fp[0]
-	t4 = Call Minimo
-	fp[12] = t4
-	TR = 4 * fp[12]
-	fp[8] = A[TR]
-	TL = 4 * fp[12]
-	TR = 4 * fp[0]
-	A[TL] = A[TR]
-	TL = 4 * fp[0]
-	A[TL] = fp[8]
-	t4 = fp[0] + 1
-	fp[0] = t4
-	goto WhileTrue3
-FalseWhileL3:
-End Ordenar
-
-Def Minimo
-	fp[0] = 0
-	Rcparam fp[0]
-	fp[4] = 0
-	fp[8] = 0
-	TR = 4 * fp[0]
-	fp[4] = A[TR]
-	fp[8] = fp[0]
-WhileTrue4:
-	IFFalse fp[0] < 10 goto FalseWhileL4
-	TL = 4 * fp[0]
-	IFFalse  A[TL] < fp[4] goto FalseIfL1
-	TR = 4 * fp[0]
-	fp[4] = A[TR]
-	fp[8] = fp[0]
-FalseIfL1:
-	t6 = fp[0] + 1
-	fp[0] = t6
-	goto WhileTrue4
-FalseWhileL4:
-	Return fp[8]
-End Minimo
 
 Def OutputInt
 	fp[0] = 0
 	Rcparam fp[0]
 End OutputInt
-
-Def InputInt
-	Return 0
-End InputInt

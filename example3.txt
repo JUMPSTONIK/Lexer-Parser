@@ -15,7 +15,7 @@ class Program
 		int b;
 		if (a<10)
 		{
-			a = a + b*c + 1;
+			a = b*c + a + 1;
 		}
 		else
 		{ a = 10; }

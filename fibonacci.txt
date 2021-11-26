@@ -1,0 +1,33 @@
+class Program
+{
+	void OutputInt(int a) {
+        return;
+    }
+	int fibonacci(int n)
+	{
+		int r;
+		if (n==0)
+		{
+			r=1;
+		}
+		else
+		{
+			if (n==1)
+			{
+				r=1;
+			}
+			else
+			{
+				r = fibonacci(n-1)+fibonacci(n-2);
+			}
+		}
+		return r;
+	}
+
+	void main(void)
+	{
+		int a;
+		a=fibonacci(5);
+		OutputInt(a);
+	}
+}

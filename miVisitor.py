@@ -36,6 +36,7 @@ class miVisitor(DECAFVisitor):
         self.savedOP = []
         self.lastIF = ""
         self.fromArray = False
+        self.paramCount = 0
 
     def visitProgram(self, ctx:DECAFParser.ProgramContext):
         return self.visitChildren(ctx)
@@ -343,8 +344,8 @@ class miVisitor(DECAFVisitor):
                             else:
                                 self.interCode += "fp[" + str(self.lists[arrayName]["arrays"][expresion]["offset"]) + "]"
                         else:
-                            print(str(ctx.getText()))
-                            print(varInExpres)
+                            # print(str(ctx.getText()))
+                            # print(varInExpres)
                             inter1 = self.interCode[0:self.interCode.rfind("\n")]
                             inter2 = self.interCode[self.interCode.rfind("\n"):]
                             """QQQQ"""
@@ -450,7 +451,7 @@ class miVisitor(DECAFVisitor):
                         self.interCode += expresion
             self.position = ""
         else:
-            print(str(ctx.getText())+ "out of OP")
+            # print(str(ctx.getText())+ "out of OP")
             temp = "t" + str(self.temporalsCount)
             "HAY un error aqui"
             self.position = "asignL"
@@ -466,11 +467,11 @@ class miVisitor(DECAFVisitor):
                 # self.position = "asign"
             else:
                 '''Aqui ira el codigo de asignacion para los arrays'''
-                print(str(ctx.getText()) + " in op")
+                # print(str(ctx.getText()) + " in op")
                 varname = str(ctx.getText())[:str(ctx.getText()).find("[")]
                 "Revisar aqui por si acaso falta algo"
-                print(varname)
-                print(asign)
+                # print(varname)
+                # print(asign)
                 if asign in self.lists[varname]['arrays']:
                     if self.lists[varname]['ambito'] == 'global':
                         code += asign + " = " + str(list(self.OpTemporal)[-1])
@@ -493,8 +494,8 @@ class miVisitor(DECAFVisitor):
             # print(str(self.OpCode) + " before")
             
             self.OpCode.insert(0,code)  
-            print(str(self.OpCode) + " after asign")
-            print(self.OpTemporal)
+            # print(str(self.OpCode) + " after asign")
+            # print(self.OpTemporal)
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by DECAFParser#returnStmt.
@@ -597,6 +598,8 @@ class miVisitor(DECAFVisitor):
                             code += "Param fp[TR]"
                         code = leftParamCode + code
                         self.interCode = inter1 + code + inter2
+        self.paramCount += 1
+        print(self.paramCount)
         # self.operandsCount = 0
         return self.visitChildren(ctx)
 
@@ -698,7 +701,7 @@ class miVisitor(DECAFVisitor):
             self.fromArray = False
             self.OpTemporal[list(self.OpTemporal)[-1]]['op'] = str(ctx.getText())
             # print(self.position + " in arith high")
-            print(self.OpTemporal)
+            # print(self.OpTemporal)
 
         return self.visitChildren(ctx)
 
@@ -709,8 +712,8 @@ class miVisitor(DECAFVisitor):
             # print(self.temporals)
             self.fromArray = False
             self.OpTemporal[list(self.OpTemporal)[-1]]['op'] = str(ctx.getText())
-            print(self.position + " in arith high")
-            print(self.OpTemporal)
+            # print(self.position + " in arith high")
+            # print(self.OpTemporal)
             # self.savedOP.append(str(ctx.getText()))
             # print(str(self.temporals) + ";;;")
             # print(self.temporals)
@@ -735,9 +738,9 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitNormal_location(self, ctx:DECAFParser.Normal_locationContext):
-        print("\n"+self.position + " in Location")
-        print(self.OpTemporal)
-        print(self.OpCode)
+        # print("\n"+self.position + " in Location")
+        # print(self.OpTemporal)
+        # print(self.OpCode)
         # print(self.temporals)
         if self.fromArray == False:
             if self.position == "if" or self.position == "while":
@@ -852,9 +855,9 @@ class miVisitor(DECAFVisitor):
                 self.operandsCount = 0
 
         elif self.position == "return" or self.position == "asign":
-            print("in Operation")
-            print(var)
-            print(arr)
+            # print("in Operation")
+            # print(var)
+            # print(arr)
             if self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] == "" and self.OpTemporal[list(self.OpTemporal)[-1]]['exp2'] == "":
                 if arr in self.lists[var]['arrays']:
                     if self.lists[var]['ambito'] == "global":
@@ -863,7 +866,7 @@ class miVisitor(DECAFVisitor):
                         self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "fp[" + str(self.lists[var]["arrays"][arr]['offset']) + "]"
                 else:
                     varInArray = arr[arr.find("[")+1:-1]
-                    print(varInArray)
+                    # print(varInArray)
                     rigthParamCode = "\n\tTR = 4 * fp[" + str(self.variables[varInArray]["offset"]) +"]"
                     if self.lists[var]['ambito'] == "global":
                         self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = var + "[TR]"
@@ -892,19 +895,19 @@ class miVisitor(DECAFVisitor):
                         self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "fp[" + str(self.lists[var]["arrays"][arr]['offset']) + "]"
                 else:
                     varInArray = arr[arr.find("[")+1:-1]
-                    print(varInArray)
+                    # print(varInArray)
                     rigthParamCode = "\n\tTR = 4 * fp[" + str(self.variables[varInArray]["offset"]) +"]"
                     if self.lists[var]['ambito'] == "global":
                         self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = var + "[TR]"
                     else:
                         rigthParamCode += "\n\tTR = " + str(self.lists[var]['offset']) + " + TR"
-                        print(var)
-                        print(arr)
+                        # print(var)
+                        # print(arr)
                         # """Aqui hay un error"""
                         self.OpTemporal[list(self.OpTemporal)[-1]]['exp1'] = "fp[TR]"
                     # self.OpCode.append(rigthParamCode)
                 
-                print(str(self.OpCode))
+                # print(str(self.OpCode))
                 # print(rigthParamCode + "]]]]]")
                 if rigthParamCode != "":
                     code = rigthParamCode + code 
@@ -986,15 +989,16 @@ class miVisitor(DECAFVisitor):
         return self.visitChildren(ctx)
 
     def visitEndline(self, ctx:DECAFParser.EndlineContext):
+        self.paramCount = 0
         if self.position == "return" or self.position == "asign":
-            print("\nin Endline")
-            print(self.OpCode)
-            print(self.OpTemporal)
+            # print("\nin Endline")
+            # print(self.OpCode)
+            # print(self.OpTemporal)
             if len(self.OpCode) >= 2:
                     line1 = self.OpCode[0].split()
                     line2 = self.OpCode[1].split()
                     # print("lines")
-                    print(str(line1))
+                    # print(str(line1))
                     try:
                         if "t" in line1[2] and "t" in line1[4]:
                             line2[-1] = line1[0]
@@ -1030,7 +1034,7 @@ class miVisitor(DECAFVisitor):
                 self.temporalsCount -= 1
                 # print(self.temporalsCount)
                 # print(self.OpCode[0])
-            print(str(self.OpCode))
+            # print(str(self.OpCode))
             for line in self.OpCode:
                 self.interCode += line
             self.temporals.update(self.OpTemporal)

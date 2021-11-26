@@ -12,18 +12,19 @@ int factorial(int n)
 	}
 
 }
-int c[5];
-// int a;
+
 void main(void)
 {
-	int i;
-	int y[10];
-	// c[1] = 0;
-	// a = 0;
-	y[2] = 2;
-	y[3] = 3;
-	y[3]= y[4]+y[3];
-	// y[4] = factorial(y[i]);
+	int a;
+	a = 0;
+	while(a< 5){
+		OutputInt(factorial(a));
+		a = a +1;
+	}
+}
+
+void OutputInt(int n){
+
 }
 
 }

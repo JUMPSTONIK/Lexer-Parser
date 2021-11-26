@@ -1,84 +1,59 @@
 .data
-A .word 0,0,0,0,0,0,0,0,0,0
-gp40: .word 0
-.text
-.global main
-main:
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-WhileTrue1:
-	mov r5, #0
-	ldr r10, [r5]
-	cmp r10, #10
-	bge FalseWhileL1
-	b WhileTrue1
-FalseWhileL1:
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-WhileTrue2:
-	mov r5, #0
-	ldr r10, [r5]
-	cmp r10, #10
-	bge FalseWhileL2
-	b WhileTrue2
-FalseWhileL2:
-	bkpt
-Ordenar:
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-	mov r6, #0
-	mov r5, #4
-	str R6, [r5]
-	mov r6, #0
-	mov r5, #8
-	str R6, [r5]
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-WhileTrue3:
-	mov r5, #0
-	ldr r10, [r5]
-	cmp r10, #10
-	bge FalseWhileL3
-	mov r6, #0
-	mov r5, #12
-	str R6, [r5]
-	b WhileTrue3
-FalseWhileL3:
-	bx lr
-Minimo:
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-	mov r6, #0
-	mov r5, #4
-	str R6, [r5]
-	mov r6, #0
-	mov r5, #8
-	str R6, [r5]
-WhileTrue4:
-	mov r5, #0
-	ldr r10, [r5]
-	cmp r10, #10
-	bge FalseWhileL4
-	mov r5, #4
-	ldr r9, [r5]
-	cmp #A[TL], r9
-	bge FalseIfL1
+buffer: .space 4
+.text 
+	j main
+
+factorial:
+	addi $sp, $sp -8
+	sw $ra, 4($sp)
+	move $t7, $zero
+	sw $t7, 0($sp)
+	lw $t7, 8($sp)
+	sw $t7, 0($sp)
+	lw $t5, 0($sp)
+	bne $t5, 0, FalseIfL1
+	li $v1, 1
+	j TrueIfL1
 FalseIfL1:
-	b WhileTrue4
-FalseWhileL4:
-	bx lr
+	lw $t1, 0($sp)
+	sub $t0, $t1, 1
+	jal factorial
+	move $t0, $v1
+	lw $t1, 0($sp)
+	mul $t0, $t1, $t0
+TrueIfL1:
+	lw $ra 4($sp)
+	addi $sp, $sp, 12
+	jr $ra
+
+main:
+	move $t7, $zero
+	sw $t7, 0($sp)
+	move $t7, $zero
+	sw $t7, 0($sp)
+WhileTrue1:
+	lw $t5, 0($sp)
+	bge $t5, 5, FalseWhileL1
+	jal OutputInt
+	 lw $t7, 0($sp)
+	addi $sp, $sp, -4
+	sw $t7, 0($sp)
+	jal factorial
+	lw $t1, 0($sp)
+	addi $t0, $t1, 1
+	sw $t0, 0($sp)
+	j WhileTrue1
+FalseWhileL1:
+	li $v0, 10 
+	syscall
+
 OutputInt:
-	mov r6, #0
-	mov r5, #0
-	str R6, [r5]
-	bx lr
-InputInt:
-	bx lr
+	addi $sp, $sp -8
+	sw $ra, 4($sp)
+	move $t7, $zero
+	sw $t7, 0($sp)
+	lw $t7, 8($sp)
+	sw $t7, 0($sp)
+	lw $ra 4($sp)
+	addi $sp, $sp, 12
+	jr $ra
